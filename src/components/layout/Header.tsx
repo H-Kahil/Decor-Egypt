@@ -82,7 +82,11 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
             {categories.map((category, index) => (
               <NavigationMenuItem key={index}>
                 <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 text-sm h-8 px-3">
-                  {category.name}
+                  <Link
+                    to={`/category/${category.name.toLowerCase().replace(/ /g, "-")}`}
+                  >
+                    {category.name}
+                  </Link>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="bg-white p-4 w-[600px] lg:w-[800px]">
                   <div className="grid grid-cols-4 gap-4">
@@ -97,7 +101,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
                               <li key={itemIndex}>
                                 <NavigationMenuLink asChild>
                                   <Link
-                                    to={`/category/${category.name.toLowerCase()}/${subcategory.name.toLowerCase()}/${item.toLowerCase().replace(/ /g, "-")}`}
+                                    to={`/category/${category.name.toLowerCase().replace(/ /g, "-")}/${subcategory.name.toLowerCase().replace(/ /g, "-")}/${item.toLowerCase().replace(/ /g, "-")}`}
                                     className="text-sm hover:text-violet-600 block py-1"
                                   >
                                     {item}
@@ -312,7 +316,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
                   {category.subcategories.map((subcategory, subIndex) => (
                     <li key={subIndex}>
                       <Link
-                        to={`/category/${category.name.toLowerCase()}/${subcategory.name.toLowerCase()}`}
+                        to={`/category/${category.name.toLowerCase().replace(/ /g, "-")}/${subcategory.name.toLowerCase().replace(/ /g, "-")}`}
                         className="text-violet-700 font-medium"
                       >
                         {subcategory.name}

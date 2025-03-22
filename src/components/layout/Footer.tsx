@@ -10,10 +10,8 @@ import {
   Twitter,
   Youtube,
   CreditCard,
-  Mail,
-  Phone,
-  MapPin,
   DollarSign,
+  Zap,
 } from "lucide-react";
 
 interface FooterProps {
@@ -22,182 +20,212 @@ interface FooterProps {
 
 const Footer = ({ className }: FooterProps = {}) => {
   return (
-    <footer className={cn("bg-primary-50 text-gray-800 pt-12 pb-6", className)}>
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Information */}
-          <div>
-            <h3 className="text-xl font-bold mb-4 text-primary-700">
-              Decor Egypt
-            </h3>
-            <p className="mb-4">
-              Your one-stop shop for home improvement and furniture with vibrant
-              designs and quality products.
-            </p>
-            <div className="flex space-x-4 mb-6">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full bg-primary-100 hover:bg-primary-200"
-              >
-                <Facebook className="h-5 w-5 text-primary-700" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full bg-primary-100 hover:bg-primary-200"
-              >
-                <Instagram className="h-5 w-5 text-primary-700" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full bg-primary-100 hover:bg-primary-200"
-              >
-                <Twitter className="h-5 w-5 text-primary-700" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full bg-primary-100 hover:bg-primary-200"
-              >
-                <Youtube className="h-5 w-5 text-primary-700" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-bold mb-4 text-primary-700">
-              Quick Links
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  to="/about"
-                  className="hover:text-primary-600 transition-colors"
+    <footer className={cn("bg-gray-900 text-white", className)}>
+      {/* Community Section */}
+      <div className="bg-violet-600 py-16 text-white text-center">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-4">Join Our Community</h2>
+          <p className="max-w-2xl mx-auto mb-8">
+            Follow us on social media for design inspiration, new product
+            announcements, and exclusive offers.
+          </p>
+          <div className="flex justify-center space-x-6">
+            {["Facebook", "Instagram", "Pinterest", "Twitter"].map(
+              (platform) => (
+                <a
+                  key={platform}
+                  href={`#${platform.toLowerCase()}`}
+                  className="bg-white/20 hover:bg-white/30 p-3 rounded-full transition-colors"
+                  aria-label={platform}
                 >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/shop"
-                  className="hover:text-primary-600 transition-colors"
-                >
-                  Products
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services"
-                  className="hover:text-primary-600 transition-colors"
-                >
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/blog"
-                  className="hover:text-primary-600 transition-colors"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="hover:text-primary-600 transition-colors"
-                >
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/faq"
-                  className="hover:text-primary-600 transition-colors"
-                >
-                  FAQs
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Information */}
-          <div>
-            <h3 className="text-xl font-bold mb-4 text-primary-700">
-              Contact Us
-            </h3>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <MapPin className="h-5 w-5 mr-2 text-primary-600 mt-0.5" />
-                <span>123 Furniture Street, Cairo, Egypt</span>
-              </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 mr-2 text-primary-600" />
-                <span>+20 123 456 7890</span>
-              </li>
-              <li className="flex items-center">
-                <Mail className="h-5 w-5 mr-2 text-primary-600" />
-                <span>info@decoregypt.com</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h3 className="text-xl font-bold mb-4 text-primary-700">
-              Newsletter
-            </h3>
-            <p className="mb-4">
-              Subscribe to our newsletter for the latest updates and offers.
-            </p>
-            <div className="flex flex-col space-y-2">
-              <Input
-                type="email"
-                placeholder="Your email address"
-                className="bg-white border-primary-200 focus:border-primary-500"
-              />
-              <Button className="bg-primary-600 hover:bg-primary-700 text-white">
-                Subscribe
-              </Button>
-            </div>
+                  <span className="sr-only">{platform}</span>
+                  <Zap className="h-5 w-5" />
+                </a>
+              ),
+            )}
           </div>
         </div>
+      </div>
 
-        <Separator className="my-8 bg-primary-200" />
+      {/* Main Footer */}
+      <div className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Company Information */}
+            <div>
+              <h3 className="text-xl font-bold mb-4">Decor Egypt</h3>
+              <p className="text-gray-400 mb-4">
+                Transforming houses into homes with quality furniture and decor
+                since 2010.
+              </p>
+              <div className="flex space-x-4">
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
 
-        {/* Bottom Footer */}
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Decor Egypt. All rights reserved.
-          </p>
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    to="/"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/shop"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Shop
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/about"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/contact"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/blog"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Blog
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Payment Methods */}
-          <div className="flex space-x-3">
-            <CreditCard className="h-6 w-6 text-gray-600" />
-            <DollarSign className="h-6 w-6 text-gray-600" />
-            <svg
-              className="h-6 w-6 text-gray-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M21 4H3C1.89543 4 1 4.89543 1 6V18C1 19.1046 1.89543 20 3 20H21C22.1046 20 23 19.1046 23 18V6C23 4.89543 22.1046 4 21 4Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M1 10H23"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            {/* Customer Service */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    to="/faq"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/shipping"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Shipping & Returns
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/warranty"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Warranty
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/privacy"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/terms"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Terms & Conditions
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Newsletter */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
+              <p className="text-gray-400 mb-4">
+                Subscribe to our newsletter for the latest products and offers.
+              </p>
+              <div className="flex">
+                <Input
+                  type="email"
+                  placeholder="Your email"
+                  className="px-4 py-2 w-full rounded-l-md focus:outline-none focus:ring-2 focus:ring-fuchsia-500 text-gray-900"
+                />
+                <Button className="bg-fuchsia-600 hover:bg-fuchsia-700 px-4 py-2 rounded-r-md transition-colors">
+                  Subscribe
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <Separator className="border-t border-gray-800 my-8" />
+
+          {/* Bottom Footer */}
+          <div className="text-center text-gray-400">
+            <p>
+              &copy; {new Date().getFullYear()} Decor Egypt. All rights
+              reserved.
+            </p>
+            <div className="mt-4 flex justify-center space-x-6">
+              <CreditCard className="h-6 w-6" />
+              <DollarSign className="h-6 w-6" />
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 4H3C1.89543 4 1 4.89543 1 6V18C1 19.1046 1.89543 20 3 20H21C22.1046 20 23 19.1046 23 18V6C23 4.89543 22.1046 4 21 4Z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M1 10H23"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
