@@ -27,7 +27,9 @@ const Footer = ({ className }: FooterProps = {}) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Information */}
           <div>
-            <h3 className="text-xl font-bold mb-4 text-primary-700">Abyat</h3>
+            <h3 className="text-xl font-bold mb-4 text-primary-700">
+              Decor Egypt
+            </h3>
             <p className="mb-4">
               Your one-stop shop for home improvement and furniture with vibrant
               designs and quality products.
@@ -137,7 +139,7 @@ const Footer = ({ className }: FooterProps = {}) => {
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-primary-600" />
-                <span>info@abyat-inspired.com</span>
+                <span>info@decoregypt.com</span>
               </li>
             </ul>
           </div>
@@ -168,8 +170,7 @@ const Footer = ({ className }: FooterProps = {}) => {
         {/* Bottom Footer */}
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Abyat-Inspired. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} Decor Egypt. All rights reserved.
           </p>
 
           {/* Payment Methods */}
