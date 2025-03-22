@@ -53,9 +53,13 @@ function App() {
       preloadShopPage();
       preloadAboutPage();
       preloadSalePage();
+      preloadCategoryPage(); // Always preload category page for better navigation
     } else if (location.pathname.includes("/shop")) {
       // Preload product-related pages
       preloadCategoryPage();
+      preloadProductDetailPage();
+    } else if (location.pathname.includes("/category")) {
+      // Preload product detail page when on category page
       preloadProductDetailPage();
     }
   }, [location.pathname]);

@@ -47,6 +47,20 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+    // You can add additional search logic here if needed
+    console.log("Searching for:", e.target.value);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Implement search submission logic here
+    console.log("Search submitted:", searchValue);
+    // You could redirect to a search results page
+    // window.location.href = `/search?q=${encodeURIComponent(searchValue)}`;
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
       {/* Single row header with logo, navigation, search, and icons */}
@@ -75,6 +89,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <Link
                 to="/"
                 className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                onClick={() => window.scrollTo(0, 0)}
               >
                 Home
               </Link>
@@ -84,6 +99,14 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
                 <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 text-sm h-8 px-3">
                   <Link
                     to={`/category/${category.name.toLowerCase().replace(/ /g, "-")}`}
+                    onClick={() => window.scrollTo(0, 0)}
+                    onMouseEnter={() => {
+                      const link = `/category/${category.name.toLowerCase().replace(/ /g, "-")}`;
+                      const linkEl = document.createElement("link");
+                      linkEl.rel = "prefetch";
+                      linkEl.href = link;
+                      document.head.appendChild(linkEl);
+                    }}
                   >
                     {category.name}
                   </Link>
@@ -103,6 +126,15 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
                                   <Link
                                     to={`/category/${category.name.toLowerCase().replace(/ /g, "-")}/${subcategory.name.toLowerCase().replace(/ /g, "-")}/${item.toLowerCase().replace(/ /g, "-")}`}
                                     className="text-sm hover:text-violet-600 block py-1"
+                                    onClick={() => window.scrollTo(0, 0)}
+                                    onMouseEnter={() => {
+                                      const link = `/category/${category.name.toLowerCase().replace(/ /g, "-")}/${subcategory.name.toLowerCase().replace(/ /g, "-")}/${item.toLowerCase().replace(/ /g, "-")}`;
+                                      const linkEl =
+                                        document.createElement("link");
+                                      linkEl.rel = "prefetch";
+                                      linkEl.href = link;
+                                      document.head.appendChild(linkEl);
+                                    }}
                                   >
                                     {item}
                                   </Link>
@@ -141,6 +173,13 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <Link
                 to="/about"
                 className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                onClick={() => window.scrollTo(0, 0)}
+                onMouseEnter={() => {
+                  const linkEl = document.createElement("link");
+                  linkEl.rel = "prefetch";
+                  linkEl.href = "/about";
+                  document.head.appendChild(linkEl);
+                }}
               >
                 About
               </Link>
@@ -149,6 +188,13 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <Link
                 to="/services"
                 className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                onClick={() => window.scrollTo(0, 0)}
+                onMouseEnter={() => {
+                  const linkEl = document.createElement("link");
+                  linkEl.rel = "prefetch";
+                  linkEl.href = "/services";
+                  document.head.appendChild(linkEl);
+                }}
               >
                 Services
               </Link>
@@ -157,6 +203,13 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <Link
                 to="/blog"
                 className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                onClick={() => window.scrollTo(0, 0)}
+                onMouseEnter={() => {
+                  const linkEl = document.createElement("link");
+                  linkEl.rel = "prefetch";
+                  linkEl.href = "/blog";
+                  document.head.appendChild(linkEl);
+                }}
               >
                 Blog
               </Link>
@@ -165,6 +218,13 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <Link
                 to="/contact"
                 className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                onClick={() => window.scrollTo(0, 0)}
+                onMouseEnter={() => {
+                  const linkEl = document.createElement("link");
+                  linkEl.rel = "prefetch";
+                  linkEl.href = "/contact";
+                  document.head.appendChild(linkEl);
+                }}
               >
                 Contact
               </Link>
@@ -173,6 +233,13 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <Link
                 to="/sale"
                 className="text-red-600 text-sm px-3 py-1 block hover:bg-red-50 rounded-md"
+                onClick={() => window.scrollTo(0, 0)}
+                onMouseEnter={() => {
+                  const linkEl = document.createElement("link");
+                  linkEl.rel = "prefetch";
+                  linkEl.href = "/sale";
+                  document.head.appendChild(linkEl);
+                }}
               >
                 Sale
               </Link>
@@ -183,16 +250,24 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
         {/* Search and icons */}
         <div className="flex items-center space-x-2 md:space-x-3">
           {/* Search - desktop */}
-          <div className="hidden md:block relative w-40 lg:w-56">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="hidden md:block relative w-40 lg:w-56"
+          >
             <Input
               type="text"
               placeholder="Search..."
               className="h-8 text-xs pr-8 border-violet-200 focus-visible:ring-violet-500"
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={handleSearch}
             />
-            <Search className="h-4 w-4 text-gray-500 absolute right-2 top-2" />
-          </div>
+            <button
+              type="submit"
+              className="absolute right-2 top-2 bg-transparent border-none p-0"
+            >
+              <Search className="h-4 w-4 text-gray-500" />
+            </button>
+          </form>
 
           {/* Search icon - mobile */}
           <Button
@@ -259,17 +334,18 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
 
       {/* Mobile search dialog */}
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <DialogContent className="sm:max-w-md" showCloseButton={false}>
-          <div className="flex items-center">
+        <DialogContent className="sm:max-w-md">
+          <form onSubmit={handleSearchSubmit} className="flex items-center">
             <Input
               type="text"
               placeholder="Search for products..."
               className="flex-1 border-violet-300 focus-visible:ring-violet-500"
               autoFocus
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={handleSearch}
             />
             <Button
+              type="button"
               variant="ghost"
               size="icon"
               className="ml-2"
@@ -277,7 +353,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
             >
               <X className="h-5 w-5" />
             </Button>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
 
@@ -305,7 +381,11 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
         <div className="overflow-y-auto flex-1 p-4">
           <ul className="space-y-4">
             <li>
-              <Link to="/" className="font-medium text-lg block py-2">
+              <Link
+                to="/"
+                className="font-medium text-lg block py-2"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 Home
               </Link>
             </li>
@@ -318,6 +398,14 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
                       <Link
                         to={`/category/${category.name.toLowerCase().replace(/ /g, "-")}/${subcategory.name.toLowerCase().replace(/ /g, "-")}`}
                         className="text-violet-700 font-medium"
+                        onClick={() => window.scrollTo(0, 0)}
+                        onMouseEnter={() => {
+                          const link = `/category/${category.name.toLowerCase().replace(/ /g, "-")}/${subcategory.name.toLowerCase().replace(/ /g, "-")}`;
+                          const linkEl = document.createElement("link");
+                          linkEl.rel = "prefetch";
+                          linkEl.href = link;
+                          document.head.appendChild(linkEl);
+                        }}
                       >
                         {subcategory.name}
                       </Link>
@@ -327,32 +415,56 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               </li>
             ))}
             <li>
-              <Link to="/about" className="font-medium text-lg block py-2">
+              <Link
+                to="/about"
+                className="font-medium text-lg block py-2"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 About
               </Link>
             </li>
             <li>
-              <Link to="/services" className="font-medium text-lg block py-2">
+              <Link
+                to="/services"
+                className="font-medium text-lg block py-2"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 Services
               </Link>
             </li>
             <li>
-              <Link to="/blog" className="font-medium text-lg block py-2">
+              <Link
+                to="/blog"
+                className="font-medium text-lg block py-2"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 Blog
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="font-medium text-lg block py-2">
+              <Link
+                to="/contact"
+                className="font-medium text-lg block py-2"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 Contact
               </Link>
             </li>
             <li>
-              <Link to="/faq" className="font-medium text-lg block py-2">
+              <Link
+                to="/faq"
+                className="font-medium text-lg block py-2"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 FAQ
               </Link>
             </li>
             <li>
-              <Link to="/sale" className="text-red-600 font-medium block py-2">
+              <Link
+                to="/sale"
+                className="text-red-600 font-medium block py-2"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 Sale
               </Link>
             </li>

@@ -31,7 +31,7 @@ const PromotionBanner = ({
           : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundBlend: "overlay",
+        backgroundBlendMode: "overlay",
       }}
     >
       {/* Overlay for better text readability */}
