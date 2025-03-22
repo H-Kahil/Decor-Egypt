@@ -49,7 +49,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
-      {/* Top bar with logo, search, and icons */}
+      {/* Single row header with logo, navigation, search, and icons */}
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Mobile menu button */}
         <Button
@@ -58,43 +58,152 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
           className="md:hidden"
           onClick={() => setIsMobileMenuOpen(true)}
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-5 w-5" />
         </Button>
 
         {/* Logo */}
-        <Link to="/" className="flex items-center">
-          <span className="text-xl font-bold text-violet-800">Decor Egypt</span>
+        <Link to="/" className="flex items-center mr-4">
+          <span className="text-2xl font-bold text-fuchsia-600">
+            Decor Egypt
+          </span>
         </Link>
 
-        {/* Search button for desktop - opens the search in nav bar */}
-        <div className="hidden md:flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="mr-2"
-            onClick={() => setIsSearchOpen(true)}
-          >
-            <Search className="h-5 w-5 text-gray-500" />
-            <span className="sr-only">Search</span>
-          </Button>
-        </div>
+        {/* Navigation links - desktop */}
+        <NavigationMenu className="hidden md:flex flex-1 justify-center">
+          <NavigationMenuList className="flex-wrap gap-0">
+            <NavigationMenuItem>
+              <Link
+                to="/"
+                className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+              >
+                Home
+              </Link>
+            </NavigationMenuItem>
+            {categories.map((category, index) => (
+              <NavigationMenuItem key={index}>
+                <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 text-sm h-8 px-3">
+                  {category.name}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="bg-white p-4 w-[600px] lg:w-[800px]">
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="col-span-3 grid grid-cols-3 gap-4">
+                      {category.subcategories.map((subcategory, subIndex) => (
+                        <div key={subIndex} className="space-y-2">
+                          <h3 className="font-medium text-violet-800 border-b border-violet-200 pb-1">
+                            {subcategory.name}
+                          </h3>
+                          <ul className="space-y-1">
+                            {subcategory.items.map((item, itemIndex) => (
+                              <li key={itemIndex}>
+                                <NavigationMenuLink asChild>
+                                  <Link
+                                    to={`/category/${category.name.toLowerCase()}/${subcategory.name.toLowerCase()}/${item.toLowerCase().replace(/ /g, "-")}`}
+                                    className="text-sm hover:text-violet-600 block py-1"
+                                  >
+                                    {item}
+                                  </Link>
+                                </NavigationMenuLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                    {category.featured && (
+                      <div className="col-span-1 bg-violet-50 p-3 rounded-lg">
+                        <h3 className="font-medium text-violet-800 mb-2">
+                          Featured
+                        </h3>
+                        {category.featured.map((item, index) => (
+                          <div key={index} className="mb-3 last:mb-0">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="rounded-md w-full h-24 object-cover mb-2"
+                            />
+                            <h4 className="text-sm font-medium">{item.name}</h4>
+                            <p className="text-xs text-gray-600">
+                              {item.description}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            ))}
+            <NavigationMenuItem>
+              <Link
+                to="/about"
+                className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+              >
+                About
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link
+                to="/services"
+                className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+              >
+                Services
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link
+                to="/blog"
+                className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+              >
+                Blog
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link
+                to="/contact"
+                className="text-sm px-3 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+              >
+                Contact
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link
+                to="/sale"
+                className="text-red-600 text-sm px-3 py-1 block hover:bg-red-50 rounded-md"
+              >
+                Sale
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
 
-        {/* Icons */}
-        <div className="flex items-center space-x-1 md:space-x-4">
+        {/* Search and icons */}
+        <div className="flex items-center space-x-2 md:space-x-3">
+          {/* Search - desktop */}
+          <div className="hidden md:block relative w-40 lg:w-56">
+            <Input
+              type="text"
+              placeholder="Search..."
+              className="h-8 text-xs pr-8 border-violet-200 focus-visible:ring-violet-500"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+            <Search className="h-4 w-4 text-gray-500 absolute right-2 top-2" />
+          </div>
+
           {/* Search icon - mobile */}
           <Button
             variant="ghost"
-            size="icon"
-            className="md:hidden"
+            size="sm"
+            className="md:hidden p-1"
             onClick={() => setIsSearchOpen(true)}
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-4 w-4" />
           </Button>
 
           {/* Wishlist */}
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="sm" className="p-1" asChild>
             <Link to="/wishlist">
-              <Heart className="h-5 w-5 text-gray-700" />
+              <Heart className="h-4 w-4 text-gray-700" />
               <span className="sr-only">Wishlist</span>
             </Link>
           </Button>
@@ -102,8 +211,8 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
           {/* User account */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5 text-gray-700" />
+              <Button variant="ghost" size="sm" className="p-1">
+                <User className="h-4 w-4 text-gray-700" />
                 <span className="sr-only">Account</span>
               </Button>
             </DropdownMenuTrigger>
@@ -132,10 +241,10 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
           </DropdownMenu>
 
           {/* Cart */}
-          <Button variant="ghost" size="icon" className="relative" asChild>
+          <Button variant="ghost" size="sm" className="relative p-1" asChild>
             <Link to="/cart">
-              <ShoppingCart className="h-5 w-5 text-gray-700" />
-              <span className="absolute -top-1 -right-1 bg-violet-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <ShoppingCart className="h-4 w-4 text-gray-700" />
+              <span className="absolute -top-1 -right-1 bg-violet-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 3
               </span>
               <span className="sr-only">Cart</span>
@@ -143,157 +252,6 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
           </Button>
         </div>
       </div>
-
-      {/* Top navigation bar with search - desktop */}
-      <nav className="hidden md:flex items-center justify-between bg-violet-50 border-t border-violet-100 px-4 py-1">
-        <div className="container mx-auto flex items-center justify-between">
-          {/* Search bar integrated in nav */}
-          <div className="flex-1 max-w-md">
-            <Input
-              type="text"
-              placeholder="Search for products..."
-              className="pr-10 border-violet-300 focus-visible:ring-violet-500 h-8 text-sm"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-          </div>
-
-          {/* Navigation links in a single row */}
-          <NavigationMenu className="ml-4">
-            <NavigationMenuList className="flex-wrap gap-0">
-              <NavigationMenuItem>
-                <Link
-                  to="/"
-                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
-                >
-                  Home
-                </Link>
-              </NavigationMenuItem>
-              {categories.map((category, index) => (
-                <NavigationMenuItem key={index}>
-                  <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 text-sm h-8 px-2">
-                    {category.name}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent className="bg-white p-4 w-[600px] lg:w-[800px]">
-                    <div className="grid grid-cols-4 gap-4">
-                      <div className="col-span-3 grid grid-cols-3 gap-4">
-                        {category.subcategories.map((subcategory, subIndex) => (
-                          <div key={subIndex} className="space-y-2">
-                            <h3 className="font-medium text-violet-800 border-b border-violet-200 pb-1">
-                              {subcategory.name}
-                            </h3>
-                            <ul className="space-y-1">
-                              {subcategory.items.map((item, itemIndex) => (
-                                <li key={itemIndex}>
-                                  <NavigationMenuLink asChild>
-                                    <Link
-                                      to={`/category/${category.name.toLowerCase()}/${subcategory.name.toLowerCase()}/${item.toLowerCase().replace(/ /g, "-")}`}
-                                      className="text-sm hover:text-violet-600 block py-1"
-                                    >
-                                      {item}
-                                    </Link>
-                                  </NavigationMenuLink>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                      {category.featured && (
-                        <div className="col-span-1 bg-violet-50 p-3 rounded-lg">
-                          <h3 className="font-medium text-violet-800 mb-2">
-                            Featured
-                          </h3>
-                          {category.featured.map((item, index) => (
-                            <div key={index} className="mb-3 last:mb-0">
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                                className="rounded-md w-full h-24 object-cover mb-2"
-                              />
-                              <h4 className="text-sm font-medium">
-                                {item.name}
-                              </h4>
-                              <p className="text-xs text-gray-600">
-                                {item.description}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              ))}
-              <NavigationMenuItem>
-                <Link
-                  to="/about"
-                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
-                >
-                  About
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
-                  to="/services"
-                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
-                >
-                  Services
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
-                  to="/blog"
-                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
-                >
-                  Blog
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 text-sm h-8 px-2">
-                  Contact
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-white p-4 w-[300px]">
-                  <div className="space-y-2">
-                    <Link
-                      to="/contact"
-                      className="text-sm hover:text-violet-600 block py-1"
-                    >
-                      Contact Us
-                    </Link>
-                    <Link
-                      to="/faq"
-                      className="text-sm hover:text-violet-600 block py-1"
-                    >
-                      FAQ
-                    </Link>
-                    <Link
-                      to="/support"
-                      className="text-sm hover:text-violet-600 block py-1"
-                    >
-                      Support
-                    </Link>
-                    <Link
-                      to="/careers"
-                      className="text-sm hover:text-violet-600 block py-1"
-                    >
-                      Careers
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
-                  to="/sale"
-                  className="text-red-600 text-sm px-2 py-1 block hover:bg-red-50 rounded-md"
-                >
-                  Sale
-                </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-      </nav>
 
       {/* Mobile search dialog */}
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
@@ -328,7 +286,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
       >
         <div className="flex items-center justify-between p-4 border-b">
           <Link to="/" className="flex items-center">
-            <span className="text-lg font-bold text-violet-800">
+            <span className="text-xl font-bold text-fuchsia-600">
               Decor Egypt
             </span>
           </Link>
