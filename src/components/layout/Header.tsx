@@ -66,21 +66,16 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
           <span className="text-xl font-bold text-violet-800">Decor Egypt</span>
         </Link>
 
-        {/* Search bar - desktop */}
-        <div className="hidden md:flex relative flex-1 max-w-md mx-8">
-          <Input
-            type="text"
-            placeholder="Search for products..."
-            className="pr-10 border-violet-300 focus-visible:ring-violet-500"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
+        {/* Search button for desktop - opens the search in nav bar */}
+        <div className="hidden md:flex items-center">
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-0 top-0"
+            className="mr-2"
+            onClick={() => setIsSearchOpen(true)}
           >
             <Search className="h-5 w-5 text-gray-500" />
+            <span className="sr-only">Search</span>
           </Button>
         </div>
 
@@ -149,22 +144,34 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
         </div>
       </div>
 
-      {/* Navigation menu - desktop */}
-      <nav className="hidden md:block bg-violet-50 border-t border-violet-100">
-        <div className="container mx-auto px-4">
-          <NavigationMenu className="mx-auto">
-            <NavigationMenuList className="gap-2">
+      {/* Top navigation bar with search - desktop */}
+      <nav className="hidden md:flex items-center justify-between bg-violet-50 border-t border-violet-100 px-4 py-1">
+        <div className="container mx-auto flex items-center justify-between">
+          {/* Search bar integrated in nav */}
+          <div className="flex-1 max-w-md">
+            <Input
+              type="text"
+              placeholder="Search for products..."
+              className="pr-10 border-violet-300 focus-visible:ring-violet-500 h-8 text-sm"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </div>
+
+          {/* Navigation links in a single row */}
+          <NavigationMenu className="ml-4">
+            <NavigationMenuList className="flex-wrap gap-0">
               <NavigationMenuItem>
                 <Link
                   to="/"
-                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
                 >
                   Home
                 </Link>
               </NavigationMenuItem>
               {categories.map((category, index) => (
                 <NavigationMenuItem key={index}>
-                  <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 font-medium">
+                  <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 text-sm h-8 px-2">
                     {category.name}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="bg-white p-4 w-[600px] lg:w-[800px]">
@@ -221,7 +228,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <NavigationMenuItem>
                 <Link
                   to="/about"
-                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
                 >
                   About
                 </Link>
@@ -229,7 +236,7 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <NavigationMenuItem>
                 <Link
                   to="/services"
-                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
                 >
                   Services
                 </Link>
@@ -237,31 +244,48 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               <NavigationMenuItem>
                 <Link
                   to="/blog"
-                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                  className="text-sm px-2 py-1 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
                 >
                   Blog
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link
-                  to="/contact"
-                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
-                >
+                <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 text-sm h-8 px-2">
                   Contact
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
-                  to="/faq"
-                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
-                >
-                  FAQ
-                </Link>
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="bg-white p-4 w-[300px]">
+                  <div className="space-y-2">
+                    <Link
+                      to="/contact"
+                      className="text-sm hover:text-violet-600 block py-1"
+                    >
+                      Contact Us
+                    </Link>
+                    <Link
+                      to="/faq"
+                      className="text-sm hover:text-violet-600 block py-1"
+                    >
+                      FAQ
+                    </Link>
+                    <Link
+                      to="/support"
+                      className="text-sm hover:text-violet-600 block py-1"
+                    >
+                      Support
+                    </Link>
+                    <Link
+                      to="/careers"
+                      className="text-sm hover:text-violet-600 block py-1"
+                    >
+                      Careers
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link
                   to="/sale"
-                  className="text-red-600 font-medium px-4 py-2 block hover:bg-red-50 rounded-md"
+                  className="text-red-600 text-sm px-2 py-1 block hover:bg-red-50 rounded-md"
                 >
                   Sale
                 </Link>

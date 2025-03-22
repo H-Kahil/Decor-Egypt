@@ -1,9 +1,9 @@
-import { Suspense, lazy } from "react";
-import { useRoutes, Routes, Route } from "react-router-dom";
+import { Suspense, lazy, useEffect } from "react";
+import { useRoutes, Routes, Route, useLocation } from "react-router-dom";
 import Home from "./components/home";
 import routes from "tempo-routes";
 
-// Lazy load pages for better performance
+// Lazy load pages with preloading for better performance
 const ShopPage = lazy(() => import("./pages/ShopPage"));
 const CategoryPage = lazy(() => import("./pages/CategoryPage"));
 const ProductDetailPage = lazy(() => import("./pages/ProductDetailPage"));
@@ -14,7 +14,52 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const FAQPage = lazy(() => import("./pages/FAQPage"));
 const SalePage = lazy(() => import("./pages/SalePage"));
 
+// Preload functions to improve page load times
+const preloadShopPage = () => import("./pages/ShopPage");
+const preloadCategoryPage = () => import("./pages/CategoryPage");
+const preloadProductDetailPage = () => import("./pages/ProductDetailPage");
+const preloadAboutPage = () => import("./pages/AboutPage");
+const preloadServicesPage = () => import("./pages/ServicesPage");
+const preloadBlogPage = () => import("./pages/BlogPage");
+const preloadContactPage = () => import("./pages/ContactPage");
+const preloadFAQPage = () => import("./pages/FAQPage");
+const preloadSalePage = () => import("./pages/SalePage");
+
 function App() {
+  const location = useLocation();
+
+  // Preload all pages when the app loads
+  useEffect(() => {
+    // Preload all pages in the background
+    const timer = setTimeout(() => {
+      preloadShopPage();
+      preloadCategoryPage();
+      preloadProductDetailPage();
+      preloadAboutPage();
+      preloadServicesPage();
+      preloadBlogPage();
+      preloadContactPage();
+      preloadFAQPage();
+      preloadSalePage();
+    }, 1000); // Start preloading after 1 second
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Preload specific pages based on current location
+  useEffect(() => {
+    if (location.pathname === "/") {
+      // Preload common pages from home page
+      preloadShopPage();
+      preloadAboutPage();
+      preloadSalePage();
+    } else if (location.pathname.includes("/shop")) {
+      // Preload product-related pages
+      preloadCategoryPage();
+      preloadProductDetailPage();
+    }
+  }, [location.pathname]);
+
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <>
