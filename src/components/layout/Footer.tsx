@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,52 +71,52 @@ const Footer = ({ className }: FooterProps = {}) => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about"
                   className="hover:text-primary-600 transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/shop"
                   className="hover:text-primary-600 transition-colors"
                 >
                   Products
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/services"
                   className="hover:text-primary-600 transition-colors"
                 >
                   Services
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/blog"
                   className="hover:text-primary-600 transition-colors"
                 >
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/contact"
                   className="hover:text-primary-600 transition-colors"
                 >
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/faq"
                   className="hover:text-primary-600 transition-colors"
                 >
                   FAQs
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
