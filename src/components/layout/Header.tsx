@@ -42,10 +42,7 @@ interface FeaturedItem {
   image: string;
 }
 
-const Header = ({
-  logo = "/vite.svg",
-  categories = defaultCategories,
-}: HeaderProps) => {
+const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -65,8 +62,7 @@ const Header = ({
 
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Abyat Store" className="h-10" />
-          <span className="ml-2 text-xl font-bold text-violet-800">Abyat</span>
+          <span className="text-xl font-bold text-violet-800">Decor Egypt</span>
         </Link>
 
         {/* Search bar - desktop */}
@@ -255,9 +251,8 @@ const Header = ({
       >
         <div className="flex items-center justify-between p-4 border-b">
           <Link to="/" className="flex items-center">
-            <img src={logo} alt="Abyat Store" className="h-8" />
-            <span className="ml-2 text-lg font-bold text-violet-800">
-              Abyat
+            <span className="text-lg font-bold text-violet-800">
+              Decor Egypt
             </span>
           </Link>
           <Button

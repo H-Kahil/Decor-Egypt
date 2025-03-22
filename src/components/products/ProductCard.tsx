@@ -29,7 +29,7 @@ const ProductCard = ({
   title = "Modern Ergonomic Chair",
   price = 249.99,
   originalPrice = 299.99,
-  image = "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&q=80",
+  image = "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400&q=80",
   rating = 4.5,
   isNew = false,
   isSale = true,

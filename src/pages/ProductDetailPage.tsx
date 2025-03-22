@@ -75,19 +75,19 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = () => {
           ],
           images: [
             {
-              src: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&q=80",
+              src: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=800&q=80",
               alt: "Modern Ergonomic Office Chair - Front View",
             },
             {
-              src: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=800&q=80",
+              src: "https://images.unsplash.com/photo-1589384267710-7a170981ca78?w=800&q=80",
               alt: "Modern Ergonomic Office Chair - Side View",
             },
             {
-              src: "https://images.unsplash.com/photo-1589384267710-7a170981ca78?w=800&q=80",
+              src: "https://images.unsplash.com/photo-1579503841516-e0bd7fca5faa?w=800&q=80",
               alt: "Modern Ergonomic Office Chair - Back View",
             },
             {
-              src: "https://images.unsplash.com/photo-1579503841516-e0bd7fca5faa?w=800&q=80",
+              src: "https://images.unsplash.com/photo-1541558869434-2840d308329a?w=800&q=80",
               alt: "Modern Ergonomic Office Chair - Detail View",
             },
           ],
@@ -131,6 +131,17 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = () => {
               rating: 4.6,
               isNew: true,
               isSale: false,
+            },
+            {
+              id: "9",
+              title: "Velvet Accent Chair",
+              price: 349.99,
+              originalPrice: 399.99,
+              image:
+                "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&q=80",
+              rating: 4.5,
+              isNew: true,
+              isSale: true,
             },
           ],
         });
