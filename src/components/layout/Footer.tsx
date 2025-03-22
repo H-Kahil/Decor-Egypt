@@ -131,11 +131,11 @@ const Footer = ({ className }: FooterProps = {}) => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 mr-2 text-primary-600 mt-0.5" />
-                <span>123 Furniture Street, Home City, 12345</span>
+                <span>123 Furniture Street, Cairo, Egypt</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-2 text-primary-600" />
-                <span>+1 (234) 567-8900</span>
+                <span>+20 123 456 7890</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-primary-600" />

@@ -45,6 +45,7 @@ interface FeaturedItem {
 const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
@@ -71,6 +72,8 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
             type="text"
             placeholder="Search for products..."
             className="pr-10 border-violet-300 focus-visible:ring-violet-500"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
           <Button
             variant="ghost"
@@ -151,6 +154,14 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
         <div className="container mx-auto px-4">
           <NavigationMenu className="mx-auto">
             <NavigationMenuList className="gap-2">
+              <NavigationMenuItem>
+                <Link
+                  to="/"
+                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                >
+                  Home
+                </Link>
+              </NavigationMenuItem>
               {categories.map((category, index) => (
                 <NavigationMenuItem key={index}>
                   <NavigationMenuTrigger className="bg-transparent hover:bg-violet-100 hover:text-violet-800 font-medium">
@@ -209,6 +220,46 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               ))}
               <NavigationMenuItem>
                 <Link
+                  to="/about"
+                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                >
+                  About
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
+                  to="/services"
+                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                >
+                  Services
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
+                  to="/blog"
+                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                >
+                  Blog
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
+                  to="/contact"
+                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                >
+                  Contact
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
+                  to="/faq"
+                  className="font-medium px-4 py-2 block hover:bg-violet-100 hover:text-violet-800 rounded-md"
+                >
+                  FAQ
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
                   to="/sale"
                   className="text-red-600 font-medium px-4 py-2 block hover:bg-red-50 rounded-md"
                 >
@@ -229,6 +280,8 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
               placeholder="Search for products..."
               className="flex-1 border-violet-300 focus-visible:ring-violet-500"
               autoFocus
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
             />
             <Button
               variant="ghost"
@@ -265,6 +318,11 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
         </div>
         <div className="overflow-y-auto flex-1 p-4">
           <ul className="space-y-4">
+            <li>
+              <Link to="/" className="font-medium text-lg block py-2">
+                Home
+              </Link>
+            </li>
             {categories.map((category, index) => (
               <li key={index} className="border-b border-gray-100 pb-4">
                 <h3 className="font-medium text-lg mb-2">{category.name}</h3>
@@ -282,6 +340,31 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
                 </ul>
               </li>
             ))}
+            <li>
+              <Link to="/about" className="font-medium text-lg block py-2">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link to="/services" className="font-medium text-lg block py-2">
+                Services
+              </Link>
+            </li>
+            <li>
+              <Link to="/blog" className="font-medium text-lg block py-2">
+                Blog
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="font-medium text-lg block py-2">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link to="/faq" className="font-medium text-lg block py-2">
+                FAQ
+              </Link>
+            </li>
             <li>
               <Link to="/sale" className="text-red-600 font-medium block py-2">
                 Sale

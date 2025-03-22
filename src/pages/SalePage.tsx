@@ -132,7 +132,9 @@ const SalePage = () => {
   const saleEndDate = new Date();
   saleEndDate.setDate(saleEndDate.getDate() + 7); // Sale ends in 7 days
   const today = new Date();
-  const daysRemaining = Math.ceil((saleEndDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const daysRemaining = Math.ceil(
+    (saleEndDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -158,9 +160,47 @@ const SalePage = () => {
             className="w-full h-64 object-cover"
           />
           <div className="absolute inset-0 z-20 flex flex-col justify-center p-8 text-white">
-            <Badge className="w-fit mb-4 bg-red-500 text-white border-none text-sm py-1 px-3">Limited Time Offer</Badge>
+            <Badge className="w-fit mb-4 bg-red-500 text-white border-none text-sm py-1 px-3">
+              Limited Time Offer
+            </Badge>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Summer Sale</h1>
             <p className="max-w-2xl text-white/90 text-lg mb-6">
-              Up to 50% off on selected furniture and home decor items. Don't miss out on these amazing deals!
+              Up to 50% off on selected furniture and home decor items. Don't
+              miss out on these amazing deals!
             </p>
-            <div className="flex items-center
+            <div className="flex items-center gap-2 bg-white/20 w-fit rounded-full px-4 py-2">
+              <Clock className="h-5 w-5" />
+              <span className="font-medium">
+                Sale ends in {daysRemaining} days
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Sale Products */}
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold mb-6">Sale Products</h2>
+          <ProductGrid products={saleProducts} />
+        </div>
+
+        {/* Call to Action */}
+        <div className="bg-violet-50 rounded-xl p-8 mb-12 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            Don't Miss Out on These Amazing Deals!
+          </h2>
+          <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+            Browse our entire collection and find the perfect pieces to
+            transform your home.
+          </p>
+          <Button size="lg" className="gap-2">
+            Shop All Products <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default SalePage;
