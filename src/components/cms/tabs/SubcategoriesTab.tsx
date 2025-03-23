@@ -15,35 +15,52 @@ import { Subcategory } from "../types";
 
 interface SubcategoriesTabProps {
   subcategories: Subcategory[];
-  subcategorySearchQuery: string;
-  handleSubcategorySearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  subcategorySearchQuery?: string;
+  handleSubcategorySearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setShowAddSubcategoryDialog: (show: boolean) => void;
   setEditingSubcategory: (subcategory: Subcategory | null) => void;
   setShowEditSubcategoryForm: (show: boolean) => void;
   setSubcategories: React.Dispatch<React.SetStateAction<Subcategory[]>>;
+  searchQuery?: string;
+  setSearchQuery?: React.Dispatch<React.SetStateAction<string>>;
+  showAddSubcategoryDialog?: boolean;
 }
 
 const SubcategoriesTab: React.FC<SubcategoriesTabProps> = ({
   subcategories,
-  subcategorySearchQuery,
+  subcategorySearchQuery = "",
   handleSubcategorySearch,
   setShowAddSubcategoryDialog,
   setEditingSubcategory,
   setShowEditSubcategoryForm,
   setSubcategories,
+  searchQuery,
+  setSearchQuery,
+  showAddSubcategoryDialog,
 }) => {
-  // Filter subcategories based on search query
+  // Use either subcategorySearchQuery or searchQuery for backward compatibility
+  const effectiveSearchQuery = subcategorySearchQuery || searchQuery || "";
+
+  // Create an effective search handler for backward compatibility
+  const effectiveSearchHandler =
+    handleSubcategorySearch ||
+    (setSearchQuery
+      ? (e: React.ChangeEvent<HTMLInputElement>) =>
+          setSearchQuery(e.target.value)
+      : undefined);
+
+  // Filter subcategories based on search query with null checks
   const filteredSubcategories = subcategories.filter(
     (subcategory) =>
-      subcategory.name
+      (subcategory.name || "")
         .toLowerCase()
-        .includes(subcategorySearchQuery.toLowerCase()) ||
-      subcategory.categoryName
+        .includes(effectiveSearchQuery.toLowerCase()) ||
+      (subcategory.categoryName || "")
         .toLowerCase()
-        .includes(subcategorySearchQuery.toLowerCase()) ||
-      subcategory.brandName
+        .includes(effectiveSearchQuery.toLowerCase()) ||
+      (subcategory.brandName || "")
         .toLowerCase()
-        .includes(subcategorySearchQuery.toLowerCase()),
+        .includes(effectiveSearchQuery.toLowerCase()),
   );
 
   return (
@@ -51,8 +68,8 @@ const SubcategoriesTab: React.FC<SubcategoriesTabProps> = ({
       <div className="flex justify-between items-center">
         <SearchBar
           placeholder="Search subcategories..."
-          value={subcategorySearchQuery}
-          onChange={handleSubcategorySearch}
+          value={effectiveSearchQuery}
+          onChange={effectiveSearchHandler}
         />
         <AddButton
           label="Add Subcategory"

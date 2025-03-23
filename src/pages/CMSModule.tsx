@@ -388,10 +388,16 @@ const CMSModule: React.FC = () => {
           <SubcategoriesTab
             subcategories={subcategories}
             setSubcategories={setSubcategories}
+            subcategorySearchQuery={subcategorySearchQuery}
+            handleSubcategorySearch={(e) =>
+              setSubcategorySearchQuery(e.target.value)
+            }
             searchQuery={subcategorySearchQuery}
             setSearchQuery={setSubcategorySearchQuery}
             showAddSubcategoryDialog={showAddSubcategoryDialog}
             setShowAddSubcategoryDialog={setShowAddSubcategoryDialog}
+            setEditingSubcategory={() => {}}
+            setShowEditSubcategoryForm={() => {}}
           />
         );
       case "product-lines":
