@@ -578,7 +578,7 @@ const CMSModule: React.FC = () => {
     description: "",
     lineId: "",
     mainImage: "",
-    additionalImages: ["", "", "", "", ""],
+    additionalImages: ["", "", "", "", "", "", "", ""],
     metadata: {},
   });
 
@@ -591,6 +591,13 @@ const CMSModule: React.FC = () => {
       stock: string;
     }>
   >([{ attributes: {}, sku: "", price: "", stock: "" }]);
+
+  // Search states for all tabs
+  const [familySearchQuery, setFamilySearchQuery] = useState("");
+  const [brandSearchQuery, setBrandSearchQuery] = useState("");
+  const [subcategorySearchQuery, setSubcategorySearchQuery] = useState("");
+  const [productLineSearchQuery, setProductLineSearchQuery] = useState("");
+  const [customerSearchQuery, setCustomerSearchQuery] = useState("");
 
   // State for selected product family (to determine variant attributes)
   const [selectedFamily, setSelectedFamily] = useState<string>("");
@@ -887,7 +894,7 @@ const CMSModule: React.FC = () => {
           description: "",
           lineId: "",
           mainImage: "",
-          additionalImages: ["", "", "", "", ""],
+          additionalImages: ["", "", "", "", "", "", "", ""],
           metadata: {},
         });
         setProductVariants([{ attributes: {}, sku: "", price: "", stock: "" }]);
@@ -909,6 +916,26 @@ const CMSModule: React.FC = () => {
 
   const handleOrderSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrderSearchQuery(e.target.value);
+  };
+
+  const handleFamilySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFamilySearchQuery(e.target.value);
+  };
+
+  const handleBrandSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBrandSearchQuery(e.target.value);
+  };
+
+  const handleSubcategorySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSubcategorySearchQuery(e.target.value);
+  };
+
+  const handleProductLineSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProductLineSearchQuery(e.target.value);
+  };
+
+  const handleCustomerSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomerSearchQuery(e.target.value);
   };
 
   // Filter products based on search query
@@ -933,6 +960,53 @@ const CMSModule: React.FC = () => {
     (order) =>
       order.id.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
       order.customer.toLowerCase().includes(orderSearchQuery.toLowerCase()),
+  );
+
+  // Filter families based on search query
+  const filteredFamilies = families.filter(
+    (family) =>
+      family.name.toLowerCase().includes(familySearchQuery.toLowerCase()) ||
+      (family.description || "")
+        .toLowerCase()
+        .includes(familySearchQuery.toLowerCase()),
+  );
+
+  // Filter brands based on search query
+  const filteredBrands = brands.filter(
+    (brand) =>
+      brand.name.toLowerCase().includes(brandSearchQuery.toLowerCase()) ||
+      brand.familyName.toLowerCase().includes(brandSearchQuery.toLowerCase()) ||
+      (brand.description || "")
+        .toLowerCase()
+        .includes(brandSearchQuery.toLowerCase()),
+  );
+
+  // Filter subcategories based on search query
+  const filteredSubcategories = subcategories.filter(
+    (subcategory) =>
+      subcategory.name
+        .toLowerCase()
+        .includes(subcategorySearchQuery.toLowerCase()) ||
+      subcategory.categoryName
+        .toLowerCase()
+        .includes(subcategorySearchQuery.toLowerCase()) ||
+      subcategory.brandName
+        .toLowerCase()
+        .includes(subcategorySearchQuery.toLowerCase()),
+  );
+
+  // Filter product lines based on search query
+  const filteredProductLines = productLines.filter(
+    (productLine) =>
+      productLine.name
+        .toLowerCase()
+        .includes(productLineSearchQuery.toLowerCase()) ||
+      productLine.subcategoryName
+        .toLowerCase()
+        .includes(productLineSearchQuery.toLowerCase()) ||
+      productLine.brandName
+        .toLowerCase()
+        .includes(productLineSearchQuery.toLowerCase()),
   );
 
   return (
@@ -1167,7 +1241,16 @@ const CMSModule: React.FC = () => {
             <TabsContent value="families" className="space-y-6">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold">Product Families</h2>
+                  <div className="relative w-64">
+                    <Input
+                      type="text"
+                      placeholder="Search families..."
+                      className="pl-9"
+                      value={familySearchQuery}
+                      onChange={handleFamilySearch}
+                    />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                  </div>
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
@@ -1188,7 +1271,7 @@ const CMSModule: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {families.map((family) => (
+                    {filteredFamilies.map((family) => (
                       <TableRow key={family.id}>
                         <TableCell className="font-medium">
                           {family.name}
@@ -1247,7 +1330,16 @@ const CMSModule: React.FC = () => {
             <TabsContent value="brands" className="space-y-6">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold">Brands</h2>
+                  <div className="relative w-64">
+                    <Input
+                      type="text"
+                      placeholder="Search brands..."
+                      className="pl-9"
+                      value={brandSearchQuery}
+                      onChange={handleBrandSearch}
+                    />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                  </div>
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
@@ -1269,7 +1361,7 @@ const CMSModule: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {brands.map((brand) => (
+                    {filteredBrands.map((brand) => (
                       <TableRow key={brand.id}>
                         <TableCell className="font-medium">
                           {brand.name}
@@ -1427,7 +1519,16 @@ const CMSModule: React.FC = () => {
             <TabsContent value="subcategories" className="space-y-6">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold">Subcategories</h2>
+                  <div className="relative w-64">
+                    <Input
+                      type="text"
+                      placeholder="Search subcategories..."
+                      className="pl-9"
+                      value={subcategorySearchQuery}
+                      onChange={handleSubcategorySearch}
+                    />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                  </div>
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
@@ -1450,7 +1551,7 @@ const CMSModule: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {subcategories.map((subcategory) => (
+                    {filteredSubcategories.map((subcategory) => (
                       <TableRow key={subcategory.id}>
                         <TableCell className="font-medium">
                           {subcategory.name}
@@ -1513,7 +1614,16 @@ const CMSModule: React.FC = () => {
             <TabsContent value="product-lines" className="space-y-6">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold">Product Lines</h2>
+                  <div className="relative w-64">
+                    <Input
+                      type="text"
+                      placeholder="Search product lines..."
+                      className="pl-9"
+                      value={productLineSearchQuery}
+                      onChange={handleProductLineSearch}
+                    />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                  </div>
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
@@ -1536,7 +1646,7 @@ const CMSModule: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {productLines.map((productLine) => (
+                    {filteredProductLines.map((productLine) => (
                       <TableRow key={productLine.id}>
                         <TableCell className="font-medium">
                           {productLine.name}
@@ -1597,6 +1707,22 @@ const CMSModule: React.FC = () => {
 
             {/* Customers Tab */}
             <TabsContent value="customers" className="space-y-6">
+              <div className="flex justify-between items-center mb-6">
+                <div className="relative w-64">
+                  <Input
+                    type="text"
+                    placeholder="Search customers..."
+                    className="pl-9"
+                    value={customerSearchQuery}
+                    onChange={handleCustomerSearch}
+                  />
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                </div>
+                <Button className="bg-violet-600 hover:bg-violet-700" disabled>
+                  <Plus className="mr-2 h-4 w-4" /> Add Customer
+                </Button>
+              </div>
+
               <div className="flex justify-center items-center h-64">
                 <div className="text-center">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -2167,12 +2293,57 @@ const CMSModule: React.FC = () => {
 
             {/* Images Tab */}
             <TabsContent value="images" className="space-y-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="main-image">Main Image URL</Label>
-                  <div className="flex gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Main Product Image */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Main Product Image</h3>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center h-64">
+                    {newProduct.mainImage ? (
+                      <div className="relative w-full h-full">
+                        <img
+                          src={newProduct.mainImage}
+                          alt="Main"
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 hover:bg-white/90 rounded-full"
+                          onClick={() =>
+                            setNewProduct({ ...newProduct, mainImage: "" })
+                          }
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="h-10 w-10 text-gray-400 mb-2" />
+                        <p className="text-sm text-gray-500 text-center mb-2">
+                          Drag and drop an image, or click to browse
+                        </p>
+                        <p className="text-xs text-gray-400 text-center">
+                          Recommended size: 1200 x 1200 pixels (1:1 ratio)
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-4"
+                          onClick={() => {
+                            const url = prompt("Enter image URL");
+                            if (url)
+                              setNewProduct({ ...newProduct, mainImage: url });
+                          }}
+                        >
+                          Select Image
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="main-image-url">Image URL</Label>
                     <Input
-                      id="main-image"
+                      id="main-image-url"
                       placeholder="Enter main image URL"
                       value={newProduct.mainImage}
                       onChange={(e) =>
@@ -2181,48 +2352,73 @@ const CMSModule: React.FC = () => {
                           mainImage: e.target.value,
                         })
                       }
-                      className="flex-1"
                     />
-                    {newProduct.mainImage && (
-                      <div className="relative w-16 h-16 border rounded">
-                        <img
-                          src={newProduct.mainImage}
-                          alt="Main"
-                          className="w-full h-full object-cover rounded"
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label>Additional Images</Label>
-                  {newProduct.additionalImages.map((img, index) => (
-                    <div key={index} className="flex gap-4 items-center">
-                      <Input
-                        placeholder={`Additional image URL ${index + 1}`}
-                        value={img}
-                        onChange={(e) => {
-                          const newImages = [...newProduct.additionalImages];
-                          newImages[index] = e.target.value;
-                          setNewProduct({
-                            ...newProduct,
-                            additionalImages: newImages,
-                          });
-                        }}
-                        className="flex-1"
-                      />
-                      {img && (
-                        <div className="relative w-12 h-12 border rounded">
-                          <img
-                            src={img}
-                            alt={`Additional ${index}`}
-                            className="w-full h-full object-cover rounded"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                {/* Gallery Images */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Gallery Images</h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    {newProduct.additionalImages.map((img, index) => (
+                      <div
+                        key={index}
+                        className="relative aspect-square border rounded-lg overflow-hidden"
+                      >
+                        {img ? (
+                          <>
+                            <img
+                              src={img}
+                              alt={`Gallery ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="absolute top-1 right-1 h-6 w-6 p-0 bg-white/80 hover:bg-white/90 rounded-full"
+                              onClick={() => {
+                                const newImages = [
+                                  ...newProduct.additionalImages,
+                                ];
+                                newImages[index] = "";
+                                setNewProduct({
+                                  ...newProduct,
+                                  additionalImages: newImages,
+                                });
+                              }}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </>
+                        ) : index < 8 ? (
+                          <div
+                            className="w-full h-full flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100"
+                            onClick={() => {
+                              const url = prompt("Enter image URL");
+                              if (url) {
+                                const newImages = [
+                                  ...newProduct.additionalImages,
+                                ];
+                                newImages[index] = url;
+                                setNewProduct({
+                                  ...newProduct,
+                                  additionalImages: newImages,
+                                });
+                              }
+                            }}
+                          >
+                            <Plus className="h-6 w-6 text-gray-400" />
+                            <span className="text-xs text-gray-500 mt-1">
+                              Add Image
+                            </span>
+                          </div>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    You can add up to 8 gallery images
+                  </p>
                 </div>
               </div>
             </TabsContent>
