@@ -18,20 +18,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Category } from "../types";
+import { Category, Brand, ProductFamily, Subcategory } from "../types";
 
 interface SubcategoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  newSubcategory: { name: string; categoryId: string; description: string };
+  newSubcategory: {
+    name: string;
+    categoryId: string;
+    description: string;
+    familyId: string;
+    brandId: string;
+  };
   setNewSubcategory: React.Dispatch<
     React.SetStateAction<{
       name: string;
       categoryId: string;
       description: string;
+      familyId: string;
+      brandId: string;
     }>
   >;
   handleAddSubcategory: () => void;
+  isEdit?: boolean;
+  editingSubcategory?: Subcategory | null;
+  handleUpdateSubcategory?: () => void;
+  families: ProductFamily[];
+  brands: Brand[];
   categories: Category[];
 }
 
@@ -41,15 +54,36 @@ const SubcategoryDialog: React.FC<SubcategoryDialogProps> = ({
   newSubcategory,
   setNewSubcategory,
   handleAddSubcategory,
-  categories,
+  isEdit = false,
+  editingSubcategory = null,
+  handleUpdateSubcategory = () => {},
+  families = [],
+  brands = [],
+  categories = [],
 }) => {
+  // Filter brands based on selected family
+  const filteredBrands = newSubcategory.familyId
+    ? brands.filter((brand) => brand.familyId === newSubcategory.familyId)
+    : brands;
+
+  // Filter categories based on selected brand
+  const filteredCategories = newSubcategory.brandId
+    ? categories.filter(
+        (category) => category.brandId === newSubcategory.brandId,
+      )
+    : categories;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Subcategory</DialogTitle>
+          <DialogTitle>
+            {isEdit ? "Edit Subcategory" : "Add New Subcategory"}
+          </DialogTitle>
           <DialogDescription>
-            Create a new subcategory and associate it with a category
+            {isEdit
+              ? "Update the subcategory details"
+              : "Create a new subcategory and associate it with a category"}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -68,6 +102,56 @@ const SubcategoryDialog: React.FC<SubcategoryDialogProps> = ({
             />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="subcategory-family">Product Family</Label>
+            <Select
+              value={newSubcategory.familyId}
+              onValueChange={(value) =>
+                setNewSubcategory({
+                  ...newSubcategory,
+                  familyId: value,
+                  brandId: "",
+                  categoryId: "",
+                })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a family" />
+              </SelectTrigger>
+              <SelectContent>
+                {families.map((family) => (
+                  <SelectItem key={family.id} value={family.id}>
+                    {family.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="subcategory-brand">Brand</Label>
+            <Select
+              value={newSubcategory.brandId}
+              onValueChange={(value) =>
+                setNewSubcategory({
+                  ...newSubcategory,
+                  brandId: value,
+                  categoryId: "",
+                })
+              }
+              disabled={!newSubcategory.familyId}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a brand" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredBrands.map((brand) => (
+                  <SelectItem key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="subcategory-category">Category</Label>
             <Select
               value={newSubcategory.categoryId}
@@ -77,12 +161,13 @@ const SubcategoryDialog: React.FC<SubcategoryDialogProps> = ({
                   categoryId: value,
                 })
               }
+              disabled={!newSubcategory.brandId}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
+                {filteredCategories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.name} ({category.brandName})
                   </SelectItem>
@@ -112,12 +197,16 @@ const SubcategoryDialog: React.FC<SubcategoryDialogProps> = ({
           <Button
             className="bg-violet-600 hover:bg-violet-700"
             onClick={() => {
-              handleAddSubcategory();
+              if (isEdit && handleUpdateSubcategory) {
+                handleUpdateSubcategory();
+              } else {
+                handleAddSubcategory();
+              }
               onOpenChange(false);
             }}
             disabled={!newSubcategory.name || !newSubcategory.categoryId}
           >
-            Add Subcategory
+            {isEdit ? "Update Subcategory" : "Add Subcategory"}
           </Button>
         </DialogFooter>
       </DialogContent>

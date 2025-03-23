@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProductFamily } from "../types";
+import { Brand, ProductFamily } from "../types";
 
 interface BrandDialogProps {
   open: boolean;
@@ -32,6 +32,9 @@ interface BrandDialogProps {
     }>
   >;
   handleAddBrand: () => void;
+  isEdit?: boolean;
+  editingBrand?: Brand | null;
+  handleUpdateBrand?: () => void;
   families: ProductFamily[];
 }
 
@@ -41,15 +44,20 @@ const BrandDialog: React.FC<BrandDialogProps> = ({
   newBrand,
   setNewBrand,
   handleAddBrand,
+  isEdit = false,
+  editingBrand = null,
+  handleUpdateBrand = () => {},
   families,
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Brand</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit Brand" : "Add New Brand"}</DialogTitle>
           <DialogDescription>
-            Create a new brand and associate it with a product family
+            {isEdit
+              ? "Update the brand details"
+              : "Create a new brand and associate it with a product family"}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -106,12 +114,16 @@ const BrandDialog: React.FC<BrandDialogProps> = ({
           <Button
             className="bg-violet-600 hover:bg-violet-700"
             onClick={() => {
-              handleAddBrand();
+              if (isEdit && handleUpdateBrand) {
+                handleUpdateBrand();
+              } else {
+                handleAddBrand();
+              }
               onOpenChange(false);
             }}
             disabled={!newBrand.name || !newBrand.familyId}
           >
-            Add Brand
+            {isEdit ? "Update Brand" : "Add Brand"}
           </Button>
         </DialogFooter>
       </DialogContent>

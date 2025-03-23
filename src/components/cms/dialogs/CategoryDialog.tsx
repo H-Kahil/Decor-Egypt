@@ -18,16 +18,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Brand } from "../types";
+import { Brand, Category, ProductFamily } from "../types";
 
 interface CategoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  newCategory: { name: string; brandId: string; description: string };
+  newCategory: {
+    name: string;
+    brandId: string;
+    description: string;
+    familyId: string;
+  };
   setNewCategory: React.Dispatch<
-    React.SetStateAction<{ name: string; brandId: string; description: string }>
+    React.SetStateAction<{
+      name: string;
+      brandId: string;
+      description: string;
+      familyId: string;
+    }>
   >;
   handleAddCategory: () => void;
+  isEdit?: boolean;
+  editingCategory?: Category | null;
+  handleUpdateCategory?: () => void;
+  families: ProductFamily[];
   brands: Brand[];
 }
 
@@ -37,15 +51,28 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   newCategory,
   setNewCategory,
   handleAddCategory,
-  brands,
+  isEdit = false,
+  editingCategory = null,
+  handleUpdateCategory = () => {},
+  families = [],
+  brands = [],
 }) => {
+  // Filter brands based on selected family
+  const filteredBrands = newCategory.familyId
+    ? brands.filter((brand) => brand.familyId === newCategory.familyId)
+    : brands;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Category</DialogTitle>
+          <DialogTitle>
+            {isEdit ? "Edit Category" : "Add New Category"}
+          </DialogTitle>
           <DialogDescription>
-            Create a new category and associate it with a brand
+            {isEdit
+              ? "Update the category details"
+              : "Create a new category and associate it with a brand"}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -64,18 +91,39 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
             />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="category-family">Product Family</Label>
+            <Select
+              value={newCategory.familyId}
+              onValueChange={(value) =>
+                setNewCategory({ ...newCategory, familyId: value, brandId: "" })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a family" />
+              </SelectTrigger>
+              <SelectContent>
+                {families.map((family) => (
+                  <SelectItem key={family.id} value={family.id}>
+                    {family.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="category-brand">Brand</Label>
             <Select
               value={newCategory.brandId}
               onValueChange={(value) =>
                 setNewCategory({ ...newCategory, brandId: value })
               }
+              disabled={!newCategory.familyId}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a brand" />
               </SelectTrigger>
               <SelectContent>
-                {brands.map((brand) => (
+                {filteredBrands.map((brand) => (
                   <SelectItem key={brand.id} value={brand.id}>
                     {brand.name} ({brand.familyName})
                   </SelectItem>
@@ -105,12 +153,18 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
           <Button
             className="bg-violet-600 hover:bg-violet-700"
             onClick={() => {
-              handleAddCategory();
+              if (isEdit && handleUpdateCategory) {
+                handleUpdateCategory();
+              } else {
+                handleAddCategory();
+              }
               onOpenChange(false);
             }}
-            disabled={!newCategory.name || !newCategory.brandId}
+            disabled={
+              !newCategory.name || !newCategory.brandId || !newCategory.familyId
+            }
           >
-            Add Category
+            {isEdit ? "Update Category" : "Add Category"}
           </Button>
         </DialogFooter>
       </DialogContent>

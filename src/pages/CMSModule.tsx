@@ -17,6 +17,9 @@ import SettingsTab from "@/components/cms/tabs/SettingsTab";
 
 // Import dialogs
 import FamilyDialog from "@/components/cms/dialogs/FamilyDialog";
+import BrandDialog from "@/components/cms/dialogs/BrandDialog";
+import CategoryDialog from "@/components/cms/dialogs/CategoryDialog";
+import SubcategoryDialog from "@/components/cms/dialogs/SubcategoryDialog";
 
 // Import types
 import {
@@ -65,13 +68,57 @@ const CMSModule: React.FC = () => {
   );
   const [showEditFamilyForm, setShowEditFamilyForm] = useState(false);
 
+  // State for new brand
+  const [newBrand, setNewBrand] = useState<{
+    name: string;
+    description: string;
+    familyId: string;
+  }>({
+    name: "",
+    description: "",
+    familyId: "",
+  });
+
   // State for editing brands
   const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
   const [showEditBrandForm, setShowEditBrandForm] = useState(false);
 
+  // State for new category
+  const [newCategory, setNewCategory] = useState<{
+    name: string;
+    description: string;
+    familyId: string;
+    brandId: string;
+  }>({
+    name: "",
+    description: "",
+    familyId: "",
+    brandId: "",
+  });
+
   // State for editing categories
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showEditCategoryForm, setShowEditCategoryForm] = useState(false);
+
+  // State for new subcategory
+  const [newSubcategory, setNewSubcategory] = useState<{
+    name: string;
+    description: string;
+    familyId: string;
+    brandId: string;
+    categoryId: string;
+  }>({
+    name: "",
+    description: "",
+    familyId: "",
+    brandId: "",
+    categoryId: "",
+  });
+
+  // State for editing subcategories
+  const [editingSubcategory, setEditingSubcategory] =
+    useState<Subcategory | null>(null);
+  const [showEditSubcategoryForm, setShowEditSubcategoryForm] = useState(false);
 
   // Sample data for product hierarchy
   const [families, setFamilies] = useState<ProductFamily[]>([
@@ -333,6 +380,163 @@ const CMSModule: React.FC = () => {
     }
   };
 
+  // Function to handle adding a new brand
+  const handleAddBrand = () => {
+    const familyName =
+      families.find((f) => f.id === newBrand.familyId)?.name || "";
+    const newBrandItem: Brand = {
+      id: Date.now().toString(),
+      name: newBrand.name,
+      description: newBrand.description,
+      status: "Active",
+      familyId: newBrand.familyId,
+      familyName: familyName,
+      logo: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80",
+    };
+    setBrands([...brands, newBrandItem]);
+    setNewBrand({ name: "", description: "", familyId: "" });
+    setShowAddBrandDialog(false);
+  };
+
+  // Function to handle updating a brand
+  const handleUpdateBrand = () => {
+    if (editingBrand) {
+      const familyName =
+        families.find((f) => f.id === newBrand.familyId)?.name || "";
+      const updatedBrands = brands.map((brand) =>
+        brand.id === editingBrand.id
+          ? {
+              ...brand,
+              name: newBrand.name,
+              description: newBrand.description,
+              familyId: newBrand.familyId,
+              familyName: familyName,
+            }
+          : brand,
+      );
+      setBrands(updatedBrands);
+      setEditingBrand(null);
+      setNewBrand({ name: "", description: "", familyId: "" });
+      setShowEditBrandForm(false);
+    }
+  };
+
+  // Function to handle adding a new category
+  const handleAddCategory = () => {
+    const familyName =
+      families.find((f) => f.id === newCategory.familyId)?.name || "";
+    const brandName =
+      brands.find((b) => b.id === newCategory.brandId)?.name || "";
+    const newCategoryItem: Category = {
+      id: Date.now().toString(),
+      name: newCategory.name,
+      description: newCategory.description,
+      status: "Active",
+      familyId: newCategory.familyId,
+      familyName: familyName,
+      brandId: newCategory.brandId,
+      brandName: brandName,
+    };
+    setCategories([...categories, newCategoryItem]);
+    setNewCategory({ name: "", description: "", familyId: "", brandId: "" });
+    setShowAddCategoryDialog(false);
+  };
+
+  // Function to handle updating a category
+  const handleUpdateCategory = () => {
+    if (editingCategory) {
+      const familyName =
+        families.find((f) => f.id === newCategory.familyId)?.name || "";
+      const brandName =
+        brands.find((b) => b.id === newCategory.brandId)?.name || "";
+      const updatedCategories = categories.map((category) =>
+        category.id === editingCategory.id
+          ? {
+              ...category,
+              name: newCategory.name,
+              description: newCategory.description,
+              familyId: newCategory.familyId,
+              familyName: familyName,
+              brandId: newCategory.brandId,
+              brandName: brandName,
+            }
+          : category,
+      );
+      setCategories(updatedCategories);
+      setEditingCategory(null);
+      setNewCategory({ name: "", description: "", familyId: "", brandId: "" });
+      setShowEditCategoryForm(false);
+    }
+  };
+
+  // Function to handle adding a new subcategory
+  const handleAddSubcategory = () => {
+    const familyName =
+      families.find((f) => f.id === newSubcategory.familyId)?.name || "";
+    const brandName =
+      brands.find((b) => b.id === newSubcategory.brandId)?.name || "";
+    const categoryName =
+      categories.find((c) => c.id === newSubcategory.categoryId)?.name || "";
+    const newSubcategoryItem: Subcategory = {
+      id: Date.now().toString(),
+      name: newSubcategory.name,
+      description: newSubcategory.description,
+      status: "Active",
+      familyId: newSubcategory.familyId,
+      familyName: familyName,
+      brandId: newSubcategory.brandId,
+      brandName: brandName,
+      categoryId: newSubcategory.categoryId,
+      categoryName: categoryName,
+    };
+    setSubcategories([...subcategories, newSubcategoryItem]);
+    setNewSubcategory({
+      name: "",
+      description: "",
+      familyId: "",
+      brandId: "",
+      categoryId: "",
+    });
+    setShowAddSubcategoryDialog(false);
+  };
+
+  // Function to handle updating a subcategory
+  const handleUpdateSubcategory = () => {
+    if (editingSubcategory) {
+      const familyName =
+        families.find((f) => f.id === newSubcategory.familyId)?.name || "";
+      const brandName =
+        brands.find((b) => b.id === newSubcategory.brandId)?.name || "";
+      const categoryName =
+        categories.find((c) => c.id === newSubcategory.categoryId)?.name || "";
+      const updatedSubcategories = subcategories.map((subcategory) =>
+        subcategory.id === editingSubcategory.id
+          ? {
+              ...subcategory,
+              name: newSubcategory.name,
+              description: newSubcategory.description,
+              familyId: newSubcategory.familyId,
+              familyName: familyName,
+              brandId: newSubcategory.brandId,
+              brandName: brandName,
+              categoryId: newSubcategory.categoryId,
+              categoryName: categoryName,
+            }
+          : subcategory,
+      );
+      setSubcategories(updatedSubcategories);
+      setEditingSubcategory(null);
+      setNewSubcategory({
+        name: "",
+        description: "",
+        familyId: "",
+        brandId: "",
+        categoryId: "",
+      });
+      setShowEditSubcategoryForm(false);
+    }
+  };
+
   // Effect to set newFamily when editingFamily changes
   React.useEffect(() => {
     if (editingFamily) {
@@ -342,6 +546,42 @@ const CMSModule: React.FC = () => {
       });
     }
   }, [editingFamily]);
+
+  // Effect to set newBrand when editingBrand changes
+  React.useEffect(() => {
+    if (editingBrand) {
+      setNewBrand({
+        name: editingBrand.name,
+        description: editingBrand.description || "",
+        familyId: editingBrand.familyId || "",
+      });
+    }
+  }, [editingBrand]);
+
+  // Effect to set newCategory when editingCategory changes
+  React.useEffect(() => {
+    if (editingCategory) {
+      setNewCategory({
+        name: editingCategory.name,
+        description: editingCategory.description || "",
+        familyId: editingCategory.familyId || "",
+        brandId: editingCategory.brandId || "",
+      });
+    }
+  }, [editingCategory]);
+
+  // Effect to set newSubcategory when editingSubcategory changes
+  React.useEffect(() => {
+    if (editingSubcategory) {
+      setNewSubcategory({
+        name: editingSubcategory.name,
+        description: editingSubcategory.description || "",
+        familyId: editingSubcategory.familyId || "",
+        brandId: editingSubcategory.brandId || "",
+        categoryId: editingSubcategory.categoryId || "",
+      });
+    }
+  }, [editingSubcategory]);
 
   // Handle search for products
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -441,8 +681,8 @@ const CMSModule: React.FC = () => {
             setSearchQuery={setSubcategorySearchQuery}
             showAddSubcategoryDialog={showAddSubcategoryDialog}
             setShowAddSubcategoryDialog={setShowAddSubcategoryDialog}
-            setEditingSubcategory={() => {}}
-            setShowEditSubcategoryForm={() => {}}
+            setEditingSubcategory={setEditingSubcategory}
+            setShowEditSubcategoryForm={setShowEditSubcategoryForm}
           />
         );
       case "product-lines":
@@ -511,6 +751,78 @@ const CMSModule: React.FC = () => {
         isEdit={true}
         editingFamily={editingFamily}
         handleUpdateFamily={handleUpdateFamily}
+      />
+
+      {/* Brand Dialogs */}
+      <BrandDialog
+        open={showAddBrandDialog}
+        onOpenChange={setShowAddBrandDialog}
+        newBrand={newBrand}
+        setNewBrand={setNewBrand}
+        handleAddBrand={handleAddBrand}
+        families={families}
+      />
+
+      <BrandDialog
+        open={showEditBrandForm}
+        onOpenChange={setShowEditBrandForm}
+        newBrand={newBrand}
+        setNewBrand={setNewBrand}
+        handleAddBrand={handleAddBrand}
+        isEdit={true}
+        editingBrand={editingBrand}
+        handleUpdateBrand={handleUpdateBrand}
+        families={families}
+      />
+
+      {/* Category Dialogs */}
+      <CategoryDialog
+        open={showAddCategoryDialog}
+        onOpenChange={setShowAddCategoryDialog}
+        newCategory={newCategory}
+        setNewCategory={setNewCategory}
+        handleAddCategory={handleAddCategory}
+        families={families}
+        brands={brands}
+      />
+
+      <CategoryDialog
+        open={showEditCategoryForm}
+        onOpenChange={setShowEditCategoryForm}
+        newCategory={newCategory}
+        setNewCategory={setNewCategory}
+        handleAddCategory={handleAddCategory}
+        isEdit={true}
+        editingCategory={editingCategory}
+        handleUpdateCategory={handleUpdateCategory}
+        families={families}
+        brands={brands}
+      />
+
+      {/* Subcategory Dialogs */}
+      <SubcategoryDialog
+        open={showAddSubcategoryDialog}
+        onOpenChange={setShowAddSubcategoryDialog}
+        newSubcategory={newSubcategory}
+        setNewSubcategory={setNewSubcategory}
+        handleAddSubcategory={handleAddSubcategory}
+        families={families}
+        brands={brands}
+        categories={categories}
+      />
+
+      <SubcategoryDialog
+        open={showEditSubcategoryForm}
+        onOpenChange={setShowEditSubcategoryForm}
+        newSubcategory={newSubcategory}
+        setNewSubcategory={setNewSubcategory}
+        handleAddSubcategory={handleAddSubcategory}
+        isEdit={true}
+        editingSubcategory={editingSubcategory}
+        handleUpdateSubcategory={handleUpdateSubcategory}
+        families={families}
+        brands={brands}
+        categories={categories}
       />
 
       <Footer />
