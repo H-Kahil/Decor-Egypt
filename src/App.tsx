@@ -70,6 +70,9 @@ function App() {
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <>
+        {/* For the tempo routes */}
+        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<ShopPage />} />
@@ -86,12 +89,12 @@ function App() {
           />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
           <Route path="/cms" element={<CMSModule />} />
+
           {/* Add tempobook route for Tempo platform */}
           {import.meta.env.VITE_TEMPO === "true" && (
             <Route path="/tempobook/*" />
           )}
         </Routes>
-        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
       </>
     </Suspense>
   );
