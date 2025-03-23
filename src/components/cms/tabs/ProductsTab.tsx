@@ -21,22 +21,38 @@ interface ProductsTabProps {
   handleSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   showAddProductDialog?: boolean;
   setShowAddProductDialog: (show: boolean) => void;
+  setEditingProduct?: (product: Product | null) => void;
+  setShowEditProductForm?: (show: boolean) => void;
 }
 
 const ProductsTab: React.FC<ProductsTabProps> = ({
   products = [],
+  setProducts = () => {},
   searchQuery = "",
   handleSearch = () => {},
   setShowAddProductDialog,
+  setEditingProduct = () => {},
+  setShowEditProductForm = () => {},
 }) => {
   // Filter products based on search query
   const filteredProducts =
     products?.filter(
       (product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.categoryName.toLowerCase().includes(searchQuery.toLowerCase()),
+        product.brandName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.categoryName?.toLowerCase().includes(searchQuery.toLowerCase()),
     ) || [];
+
+  // Handle edit product
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setShowEditProductForm(true);
+  };
+
+  // Handle delete product
+  const handleDeleteProduct = (productId: string) => {
+    setProducts(products.filter((product) => product.id !== productId));
+  };
 
   return (
     <div className="space-y-6">
@@ -75,7 +91,10 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
                   <StatusBadge status={product.status} />
                 </TableCell>
                 <TableCell className="text-right">
-                  <ActionButtons />
+                  <ActionButtons
+                    onEdit={() => handleEditProduct(product)}
+                    onDelete={() => handleDeleteProduct(product.id)}
+                  />
                 </TableCell>
               </TableRow>
             ))

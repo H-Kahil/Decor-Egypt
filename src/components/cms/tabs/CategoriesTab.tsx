@@ -69,18 +69,15 @@ const CategoriesTab: React.FC<CategoriesTabProps> = ({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Categories</h2>
-        <div className="flex space-x-4">
-          <SearchBar
-            placeholder="Search categories..."
-            value={effectiveSearchQuery}
-            onChange={effectiveSearchHandler}
-          />
-          <AddButton
-            label="Add Category"
-            onClick={() => setShowAddCategoryDialog(true)}
-          />
-        </div>
+        <SearchBar
+          placeholder="Search categories..."
+          value={effectiveSearchQuery}
+          onChange={effectiveSearchHandler}
+        />
+        <AddButton
+          label="Add Category"
+          onClick={() => setShowAddCategoryDialog(true)}
+        />
       </div>
 
       <Table>
