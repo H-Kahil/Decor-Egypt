@@ -307,6 +307,15 @@ const Header = ({ logo = "", categories = defaultCategories }: HeaderProps) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
+                <Link
+                  to="/cms"
+                  className="w-full"
+                  onClick={() => window.scrollTo(0, 0)}
+                >
+                  Content Management
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
                 <Link to="/login" className="w-full">
                   Sign In
                 </Link>

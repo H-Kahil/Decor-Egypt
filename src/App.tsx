@@ -13,6 +13,7 @@ const BlogPage = lazy(() => import("./pages/BlogPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const FAQPage = lazy(() => import("./pages/FAQPage"));
 const SalePage = lazy(() => import("./pages/SalePage"));
+const CMSModule = lazy(() => import("./pages/CMSModule"));
 
 // Preload functions to improve page load times
 const preloadShopPage = () => import("./pages/ShopPage");
@@ -24,6 +25,7 @@ const preloadBlogPage = () => import("./pages/BlogPage");
 const preloadContactPage = () => import("./pages/ContactPage");
 const preloadFAQPage = () => import("./pages/FAQPage");
 const preloadSalePage = () => import("./pages/SalePage");
+const preloadCMSModule = () => import("./pages/CMSModule");
 
 function App() {
   const location = useLocation();
@@ -41,6 +43,7 @@ function App() {
       preloadContactPage();
       preloadFAQPage();
       preloadSalePage();
+      preloadCMSModule();
     }, 1000); // Start preloading after 1 second
 
     return () => clearTimeout(timer);
@@ -82,6 +85,7 @@ function App() {
             element={<CategoryPage />}
           />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
+          <Route path="/cms" element={<CMSModule />} />
           {/* Add tempobook route for Tempo platform */}
           {import.meta.env.VITE_TEMPO === "true" && (
             <Route path="/tempobook/*" />
