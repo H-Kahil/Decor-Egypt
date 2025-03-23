@@ -50,6 +50,15 @@ const CMSModule: React.FC = () => {
     useState(false);
   const [showAddProductDialog, setShowAddProductDialog] = useState(false);
 
+  // State for new family
+  const [newFamily, setNewFamily] = useState<{
+    name: string;
+    description: string;
+  }>({
+    name: "",
+    description: "",
+  });
+
   // State for editing items
   const [editingFamily, setEditingFamily] = useState<ProductFamily | null>(
     null,
@@ -293,10 +302,46 @@ const CMSModule: React.FC = () => {
   ]);
 
   // Function to handle adding a new family
-  const handleAddFamily = (family: ProductFamily) => {
-    setFamilies([...families, family]);
+  const handleAddFamily = () => {
+    const newFamilyItem: ProductFamily = {
+      id: Date.now().toString(),
+      name: newFamily.name,
+      description: newFamily.description,
+      status: "Active",
+    };
+    setFamilies([...families, newFamilyItem]);
+    setNewFamily({ name: "", description: "" });
     setShowAddFamilyDialog(false);
   };
+
+  // Function to handle updating a family
+  const handleUpdateFamily = () => {
+    if (editingFamily) {
+      const updatedFamilies = families.map((family) =>
+        family.id === editingFamily.id
+          ? {
+              ...family,
+              name: newFamily.name,
+              description: newFamily.description,
+            }
+          : family,
+      );
+      setFamilies(updatedFamilies);
+      setEditingFamily(null);
+      setNewFamily({ name: "", description: "" });
+      setShowEditFamilyForm(false);
+    }
+  };
+
+  // Effect to set newFamily when editingFamily changes
+  React.useEffect(() => {
+    if (editingFamily) {
+      setNewFamily({
+        name: editingFamily.name,
+        description: editingFamily.description || "",
+      });
+    }
+  }, [editingFamily]);
 
   // Handle search for products
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -451,9 +496,21 @@ const CMSModule: React.FC = () => {
       <FamilyDialog
         open={showAddFamilyDialog}
         onOpenChange={setShowAddFamilyDialog}
-        newFamily={{ name: "", description: "" }}
-        setNewFamily={() => {}}
+        newFamily={newFamily}
+        setNewFamily={setNewFamily}
         handleAddFamily={handleAddFamily}
+      />
+
+      {/* Edit Family Dialog */}
+      <FamilyDialog
+        open={showEditFamilyForm}
+        onOpenChange={setShowEditFamilyForm}
+        newFamily={newFamily}
+        setNewFamily={setNewFamily}
+        handleAddFamily={handleAddFamily}
+        isEdit={true}
+        editingFamily={editingFamily}
+        handleUpdateFamily={handleUpdateFamily}
       />
 
       <Footer />
