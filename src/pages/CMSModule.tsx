@@ -21,6 +21,7 @@ import BrandDialog from "@/components/cms/dialogs/BrandDialog";
 import CategoryDialog from "@/components/cms/dialogs/CategoryDialog";
 import SubcategoryDialog from "@/components/cms/dialogs/SubcategoryDialog";
 import ProductDialog from "@/components/cms/dialogs/ProductDialog";
+import ProductLineDialog from "@/components/cms/dialogs/ProductLineDialog";
 
 // Import types
 import {
@@ -142,9 +143,31 @@ const CMSModule: React.FC = () => {
     sku: "",
   });
 
+  // State for new product line
+  const [newProductLine, setNewProductLine] = useState<{
+    name: string;
+    description: string;
+    familyId: string;
+    brandId: string;
+    categoryId: string;
+    subcategoryId: string;
+  }>({
+    name: "",
+    description: "",
+    familyId: "",
+    brandId: "",
+    categoryId: "",
+    subcategoryId: "",
+  });
+
   // State for editing products
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
+
+  // State for editing product lines
+  const [editingProductLine, setEditingProductLine] =
+    useState<ProductLine | null>(null);
+  const [showEditProductLineForm, setShowEditProductLineForm] = useState(false);
 
   // Sample data for product hierarchy
   const [families, setFamilies] = useState<ProductFamily[]>([
@@ -657,6 +680,90 @@ const CMSModule: React.FC = () => {
     }
   };
 
+  // Function to handle adding a new product line
+  const handleAddProductLine = () => {
+    const familyName =
+      families.find((f) => f.id === newProductLine.familyId)?.name || "";
+    const brandName =
+      brands.find((b) => b.id === newProductLine.brandId)?.name || "";
+    const categoryName =
+      categories.find((c) => c.id === newProductLine.categoryId)?.name || "";
+    const subcategoryName =
+      subcategories.find((s) => s.id === newProductLine.subcategoryId)?.name ||
+      "";
+
+    const newProductLineItem: ProductLine = {
+      id: Date.now().toString(),
+      name: newProductLine.name,
+      description: newProductLine.description,
+      status: "Active",
+      familyId: newProductLine.familyId,
+      familyName: familyName,
+      brandId: newProductLine.brandId,
+      brandName: brandName,
+      categoryId: newProductLine.categoryId,
+      categoryName: categoryName,
+      subcategoryId: newProductLine.subcategoryId,
+      subcategoryName: subcategoryName,
+    };
+
+    setProductLines([...productLines, newProductLineItem]);
+    setNewProductLine({
+      name: "",
+      description: "",
+      familyId: "",
+      brandId: "",
+      categoryId: "",
+      subcategoryId: "",
+    });
+    setShowAddProductLineDialog(false);
+  };
+
+  // Function to handle updating a product line
+  const handleUpdateProductLine = () => {
+    if (editingProductLine) {
+      const familyName =
+        families.find((f) => f.id === newProductLine.familyId)?.name || "";
+      const brandName =
+        brands.find((b) => b.id === newProductLine.brandId)?.name || "";
+      const categoryName =
+        categories.find((c) => c.id === newProductLine.categoryId)?.name || "";
+      const subcategoryName =
+        subcategories.find((s) => s.id === newProductLine.subcategoryId)
+          ?.name || "";
+
+      const updatedProductLines = productLines.map((productLine) =>
+        productLine.id === editingProductLine.id
+          ? {
+              ...productLine,
+              name: newProductLine.name,
+              description: newProductLine.description,
+              familyId: newProductLine.familyId,
+              familyName: familyName,
+              brandId: newProductLine.brandId,
+              brandName: brandName,
+              categoryId: newProductLine.categoryId,
+              categoryName: categoryName,
+              subcategoryId: newProductLine.subcategoryId,
+              subcategoryName: subcategoryName,
+            }
+          : productLine,
+      );
+
+      setProductLines(updatedProductLines);
+      setEditingProductLine(null);
+      setNewProductLine({
+        name: "",
+        description: "",
+        familyId: "",
+        brandId: "",
+        categoryId: "",
+        subcategoryId: "",
+      });
+      setShowEditProductLineForm(false);
+    }
+  };
+
   // Effect to set newFamily when editingFamily changes
   React.useEffect(() => {
     if (editingFamily) {
@@ -718,6 +825,20 @@ const CMSModule: React.FC = () => {
       });
     }
   }, [editingProduct]);
+
+  // Effect to set newProductLine when editingProductLine changes
+  React.useEffect(() => {
+    if (editingProductLine) {
+      setNewProductLine({
+        name: editingProductLine.name,
+        description: editingProductLine.description || "",
+        familyId: editingProductLine.familyId || "",
+        brandId: editingProductLine.brandId || "",
+        categoryId: editingProductLine.categoryId || "",
+        subcategoryId: editingProductLine.subcategoryId || "",
+      });
+    }
+  }, [editingProductLine]);
 
   // Handle search for products
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -833,8 +954,8 @@ const CMSModule: React.FC = () => {
             }
             setProductLines={setProductLines}
             setShowAddProductLineDialog={setShowAddProductLineDialog}
-            setEditingProductLine={() => {}}
-            setShowEditProductLineForm={() => {}}
+            setEditingProductLine={setEditingProductLine}
+            setShowEditProductLineForm={setShowEditProductLineForm}
           />
         );
       case "customers":
@@ -987,6 +1108,34 @@ const CMSModule: React.FC = () => {
         isEdit={true}
         editingProduct={editingProduct}
         handleUpdateProduct={handleUpdateProduct}
+        families={families}
+        brands={brands}
+        categories={categories}
+        subcategories={subcategories}
+      />
+
+      {/* Product Line Dialogs */}
+      <ProductLineDialog
+        open={showAddProductLineDialog}
+        onOpenChange={setShowAddProductLineDialog}
+        newProductLine={newProductLine}
+        setNewProductLine={setNewProductLine}
+        handleAddProductLine={handleAddProductLine}
+        families={families}
+        brands={brands}
+        categories={categories}
+        subcategories={subcategories}
+      />
+
+      <ProductLineDialog
+        open={showEditProductLineForm}
+        onOpenChange={setShowEditProductLineForm}
+        newProductLine={newProductLine}
+        setNewProductLine={setNewProductLine}
+        handleAddProductLine={handleAddProductLine}
+        isEdit={true}
+        editingProductLine={editingProductLine}
+        handleUpdateProductLine={handleUpdateProductLine}
         families={families}
         brands={brands}
         categories={categories}

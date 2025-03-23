@@ -39,10 +39,10 @@ const ProductLinesTab: React.FC<ProductLinesTabProps> = ({
         .toLowerCase()
         .includes(productLineSearchQuery.toLowerCase()) ||
       productLine.subcategoryName
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(productLineSearchQuery.toLowerCase()) ||
       productLine.brandName
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(productLineSearchQuery.toLowerCase()),
   );
 

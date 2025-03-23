@@ -18,20 +18,42 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Subcategory } from "../types";
+import {
+  Brand,
+  Category,
+  ProductFamily,
+  Subcategory,
+  ProductLine,
+} from "../types";
 
 interface ProductLineDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  newProductLine: { name: string; subcategoryId: string; description: string };
+  newProductLine: {
+    name: string;
+    description: string;
+    familyId: string;
+    brandId: string;
+    categoryId: string;
+    subcategoryId: string;
+  };
   setNewProductLine: React.Dispatch<
     React.SetStateAction<{
       name: string;
-      subcategoryId: string;
       description: string;
+      familyId: string;
+      brandId: string;
+      categoryId: string;
+      subcategoryId: string;
     }>
   >;
   handleAddProductLine: () => void;
+  isEdit?: boolean;
+  editingProductLine?: ProductLine | null;
+  handleUpdateProductLine?: () => void;
+  families: ProductFamily[];
+  brands: Brand[];
+  categories: Category[];
   subcategories: Subcategory[];
 }
 
@@ -41,15 +63,44 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
   newProductLine,
   setNewProductLine,
   handleAddProductLine,
-  subcategories,
+  isEdit = false,
+  editingProductLine = null,
+  handleUpdateProductLine = () => {},
+  families = [],
+  brands = [],
+  categories = [],
+  subcategories = [],
 }) => {
+  // Filter brands based on selected family
+  const filteredBrands = newProductLine.familyId
+    ? brands.filter((brand) => brand.familyId === newProductLine.familyId)
+    : brands;
+
+  // Filter categories based on selected brand
+  const filteredCategories = newProductLine.brandId
+    ? categories.filter(
+        (category) => category.brandId === newProductLine.brandId,
+      )
+    : categories;
+
+  // Filter subcategories based on selected category
+  const filteredSubcategories = newProductLine.categoryId
+    ? subcategories.filter(
+        (subcategory) => subcategory.categoryId === newProductLine.categoryId,
+      )
+    : subcategories;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Product Line/Model</DialogTitle>
+          <DialogTitle>
+            {isEdit ? "Edit Product Line" : "Add New Product Line"}
+          </DialogTitle>
           <DialogDescription>
-            Create a new product line and associate it with a subcategory
+            {isEdit
+              ? "Update the product line details"
+              : "Create a new product line and associate it with a subcategory"}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -68,7 +119,84 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="product-line-subcategory">Subcategory</Label>
+            <Label htmlFor="product-family">Product Family</Label>
+            <Select
+              value={newProductLine.familyId}
+              onValueChange={(value) =>
+                setNewProductLine({
+                  ...newProductLine,
+                  familyId: value,
+                  brandId: "",
+                  categoryId: "",
+                  subcategoryId: "",
+                })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a family" />
+              </SelectTrigger>
+              <SelectContent>
+                {families.map((family) => (
+                  <SelectItem key={family.id} value={family.id}>
+                    {family.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="product-brand">Brand</Label>
+            <Select
+              value={newProductLine.brandId}
+              onValueChange={(value) =>
+                setNewProductLine({
+                  ...newProductLine,
+                  brandId: value,
+                  categoryId: "",
+                  subcategoryId: "",
+                })
+              }
+              disabled={!newProductLine.familyId}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a brand" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredBrands.map((brand) => (
+                  <SelectItem key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="product-category">Category</Label>
+            <Select
+              value={newProductLine.categoryId}
+              onValueChange={(value) =>
+                setNewProductLine({
+                  ...newProductLine,
+                  categoryId: value,
+                  subcategoryId: "",
+                })
+              }
+              disabled={!newProductLine.brandId}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredCategories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="product-subcategory">Subcategory</Label>
             <Select
               value={newProductLine.subcategoryId}
               onValueChange={(value) =>
@@ -77,14 +205,15 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
                   subcategoryId: value,
                 })
               }
+              disabled={!newProductLine.categoryId}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a subcategory" />
               </SelectTrigger>
               <SelectContent>
-                {subcategories.map((subcategory) => (
+                {filteredSubcategories.map((subcategory) => (
                   <SelectItem key={subcategory.id} value={subcategory.id}>
-                    {subcategory.name} ({subcategory.categoryName})
+                    {subcategory.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -112,12 +241,22 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
           <Button
             className="bg-violet-600 hover:bg-violet-700"
             onClick={() => {
-              handleAddProductLine();
+              if (isEdit && handleUpdateProductLine) {
+                handleUpdateProductLine();
+              } else {
+                handleAddProductLine();
+              }
               onOpenChange(false);
             }}
-            disabled={!newProductLine.name || !newProductLine.subcategoryId}
+            disabled={
+              !newProductLine.name ||
+              !newProductLine.familyId ||
+              !newProductLine.brandId ||
+              !newProductLine.categoryId ||
+              !newProductLine.subcategoryId
+            }
           >
-            Add Product Line
+            {isEdit ? "Update Product Line" : "Add Product Line"}
           </Button>
         </DialogFooter>
       </DialogContent>
