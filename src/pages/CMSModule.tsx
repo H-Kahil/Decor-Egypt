@@ -46,6 +46,14 @@ import {
   Image as ImageIcon,
   Check,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // Define interfaces for product hierarchy
 interface ProductFamily {
@@ -143,17 +151,21 @@ interface Order {
 }
 
 const CMSModule: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("orders");
+  const [activeTab, setActiveTab] = useState("products");
   const [searchQuery, setSearchQuery] = useState("");
   const [categorySearchQuery, setCategorySearchQuery] = useState("");
   const [orderSearchQuery, setOrderSearchQuery] = useState("");
 
-  // State for showing/hiding forms
-  const [showAddFamilyForm, setShowAddFamilyForm] = useState(false);
-  const [showAddBrandForm, setShowAddBrandForm] = useState(false);
-  const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
-  const [showAddSubcategoryForm, setShowAddSubcategoryForm] = useState(false);
-  const [showAddProductLineForm, setShowAddProductLineForm] = useState(false);
+  // State for showing/hiding dialogs
+  const [showAddFamilyDialog, setShowAddFamilyDialog] = useState(false);
+  const [showAddBrandDialog, setShowAddBrandDialog] = useState(false);
+  const [showAddCategoryDialog, setShowAddCategoryDialog] = useState(false);
+  const [showAddSubcategoryDialog, setShowAddSubcategoryDialog] =
+    useState(false);
+  const [showAddProductLineDialog, setShowAddProductLineDialog] =
+    useState(false);
+  const [showAddProductDialog, setShowAddProductDialog] = useState(false);
+  const [productFormTab, setProductFormTab] = useState("basic");
 
   // State for editing items
   const [editingFamily, setEditingFamily] = useState<ProductFamily | null>(
@@ -953,10 +965,10 @@ const CMSModule: React.FC = () => {
           >
             <TabsList className="w-full justify-start border-b mb-6 rounded-none bg-transparent overflow-x-auto">
               <TabsTrigger
-                value="orders"
+                value="products"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
               >
-                Orders
+                Products
               </TabsTrigger>
               <TabsTrigger
                 value="families"
@@ -989,10 +1001,10 @@ const CMSModule: React.FC = () => {
                 Product Lines
               </TabsTrigger>
               <TabsTrigger
-                value="products"
+                value="orders"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
               >
-                Products
+                Orders
               </TabsTrigger>
               <TabsTrigger
                 value="customers"
@@ -1023,7 +1035,7 @@ const CMSModule: React.FC = () => {
                 </div>
                 <Button
                   className="bg-violet-600 hover:bg-violet-700"
-                  onClick={() => setShowPreview(true)}
+                  onClick={() => setShowAddProductDialog(true)}
                 >
                   <Plus className="mr-2 h-4 w-4" /> Add Product
                 </Button>
@@ -1159,7 +1171,7 @@ const CMSModule: React.FC = () => {
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
-                      setShowAddFamilyForm(!showAddFamilyForm);
+                      setShowAddFamilyDialog(true);
                     }}
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add Family
@@ -1227,62 +1239,7 @@ const CMSModule: React.FC = () => {
                   </TableBody>
                 </Table>
 
-                {showAddFamilyForm && (
-                  <Card className="mt-6 max-w-2xl mx-auto">
-                    <CardHeader>
-                      <CardTitle>Add New Product Family</CardTitle>
-                      <CardDescription>
-                        Create a new top-level product family (e.g., Mobile,
-                        Apparel)
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="family-name">Family Name</Label>
-                        <Input
-                          id="family-name"
-                          placeholder="Enter family name"
-                          value={newFamily.name}
-                          onChange={(e) =>
-                            setNewFamily({ ...newFamily, name: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="family-description">Description</Label>
-                        <Textarea
-                          id="family-description"
-                          placeholder="Enter family description"
-                          value={newFamily.description}
-                          onChange={(e) =>
-                            setNewFamily({
-                              ...newFamily,
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowAddFamilyForm(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        className="bg-violet-600 hover:bg-violet-700"
-                        onClick={() => {
-                          handleAddFamily();
-                          setShowAddFamilyForm(false);
-                        }}
-                        disabled={!newFamily.name}
-                      >
-                        Add Family
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                )}
+                {/* Family Dialog will be added at the end of the component */}
               </div>
             </TabsContent>
 
@@ -1294,7 +1251,7 @@ const CMSModule: React.FC = () => {
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
-                      setShowAddBrandForm(!showAddBrandForm);
+                      setShowAddBrandDialog(true);
                     }}
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add Brand
@@ -1364,82 +1321,7 @@ const CMSModule: React.FC = () => {
                   </TableBody>
                 </Table>
 
-                {showAddBrandForm && (
-                  <Card className="mt-6 max-w-2xl mx-auto">
-                    <CardHeader>
-                      <CardTitle>Add New Brand</CardTitle>
-                      <CardDescription>
-                        Create a new brand and associate it with a product
-                        family
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="brand-name">Brand Name</Label>
-                        <Input
-                          id="brand-name"
-                          placeholder="Enter brand name"
-                          value={newBrand.name}
-                          onChange={(e) =>
-                            setNewBrand({ ...newBrand, name: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="brand-family">Product Family</Label>
-                        <Select
-                          value={newBrand.familyId}
-                          onValueChange={(value) =>
-                            setNewBrand({ ...newBrand, familyId: value })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a family" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {families.map((family) => (
-                              <SelectItem key={family.id} value={family.id}>
-                                {family.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="brand-description">Description</Label>
-                        <Textarea
-                          id="brand-description"
-                          placeholder="Enter brand description"
-                          value={newBrand.description}
-                          onChange={(e) =>
-                            setNewBrand({
-                              ...newBrand,
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowAddBrandForm(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        className="bg-violet-600 hover:bg-violet-700"
-                        onClick={() => {
-                          handleAddBrand();
-                          setShowAddBrandForm(false);
-                        }}
-                        disabled={!newBrand.name || !newBrand.familyId}
-                      >
-                        Add Brand
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                )}
+                {/* Brand Dialog will be added at the end of the component */}
               </div>
             </TabsContent>
 
@@ -1462,7 +1344,7 @@ const CMSModule: React.FC = () => {
                     <Button
                       className="bg-violet-600 hover:bg-violet-700"
                       onClick={() => {
-                        setShowAddCategoryForm(!showAddCategoryForm);
+                        setShowAddCategoryDialog(true);
                       }}
                     >
                       <Plus className="mr-2 h-4 w-4" /> Add Category
@@ -1537,86 +1419,7 @@ const CMSModule: React.FC = () => {
                   </TableBody>
                 </Table>
 
-                {showAddCategoryForm && (
-                  <Card className="mt-6 max-w-2xl mx-auto">
-                    <CardHeader>
-                      <CardTitle>Add New Category</CardTitle>
-                      <CardDescription>
-                        Create a new category and associate it with a brand
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="category-name">Category Name</Label>
-                        <Input
-                          id="category-name"
-                          placeholder="Enter category name"
-                          value={newCategory.name}
-                          onChange={(e) =>
-                            setNewCategory({
-                              ...newCategory,
-                              name: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="category-brand">Brand</Label>
-                        <Select
-                          value={newCategory.brandId}
-                          onValueChange={(value) =>
-                            setNewCategory({ ...newCategory, brandId: value })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a brand" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {brands.map((brand) => (
-                              <SelectItem key={brand.id} value={brand.id}>
-                                {brand.name} ({brand.familyName})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="category-description">
-                          Description
-                        </Label>
-                        <Textarea
-                          id="category-description"
-                          placeholder="Enter category description"
-                          value={newCategory.description}
-                          onChange={(e) =>
-                            setNewCategory({
-                              ...newCategory,
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowAddCategoryForm(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        className="bg-violet-600 hover:bg-violet-700"
-                        onClick={() => {
-                          handleAddCategory();
-                          setShowAddCategoryForm(false);
-                        }}
-                        disabled={!newCategory.name || !newCategory.brandId}
-                      >
-                        Add Category
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                )}
+                {/* Category Dialog will be added at the end of the component */}
               </div>
             </TabsContent>
 
@@ -1628,7 +1431,7 @@ const CMSModule: React.FC = () => {
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
-                      setShowAddSubcategoryForm(!showAddSubcategoryForm);
+                      setShowAddSubcategoryDialog(true);
                     }}
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add Subcategory
@@ -1702,94 +1505,7 @@ const CMSModule: React.FC = () => {
                   </TableBody>
                 </Table>
 
-                {showAddSubcategoryForm && (
-                  <Card className="mt-6 max-w-2xl mx-auto">
-                    <CardHeader>
-                      <CardTitle>Add New Subcategory</CardTitle>
-                      <CardDescription>
-                        Create a new subcategory and associate it with a
-                        category
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="subcategory-name">
-                          Subcategory Name
-                        </Label>
-                        <Input
-                          id="subcategory-name"
-                          placeholder="Enter subcategory name"
-                          value={newSubcategory.name}
-                          onChange={(e) =>
-                            setNewSubcategory({
-                              ...newSubcategory,
-                              name: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="subcategory-category">Category</Label>
-                        <Select
-                          value={newSubcategory.categoryId}
-                          onValueChange={(value) =>
-                            setNewSubcategory({
-                              ...newSubcategory,
-                              categoryId: value,
-                            })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {categories.map((category) => (
-                              <SelectItem key={category.id} value={category.id}>
-                                {category.name} ({category.brandName})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="subcategory-description">
-                          Description
-                        </Label>
-                        <Textarea
-                          id="subcategory-description"
-                          placeholder="Enter subcategory description"
-                          value={newSubcategory.description}
-                          onChange={(e) =>
-                            setNewSubcategory({
-                              ...newSubcategory,
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowAddSubcategoryForm(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        className="bg-violet-600 hover:bg-violet-700"
-                        onClick={() => {
-                          handleAddSubcategory();
-                          setShowAddSubcategoryForm(false);
-                        }}
-                        disabled={
-                          !newSubcategory.name || !newSubcategory.categoryId
-                        }
-                      >
-                        Add Subcategory
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                )}
+                {/* Subcategory Dialog will be added at the end of the component */}
               </div>
             </TabsContent>
 
@@ -1801,7 +1517,7 @@ const CMSModule: React.FC = () => {
                   <Button
                     className="bg-violet-600 hover:bg-violet-700"
                     onClick={() => {
-                      setShowAddProductLineForm(!showAddProductLineForm);
+                      setShowAddProductLineDialog(true);
                     }}
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add Product Line
@@ -1875,99 +1591,7 @@ const CMSModule: React.FC = () => {
                   </TableBody>
                 </Table>
 
-                {showAddProductLineForm && (
-                  <Card className="mt-6 max-w-2xl mx-auto">
-                    <CardHeader>
-                      <CardTitle>Add New Product Line/Model</CardTitle>
-                      <CardDescription>
-                        Create a new product line and associate it with a
-                        subcategory
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="product-line-name">
-                          Product Line Name
-                        </Label>
-                        <Input
-                          id="product-line-name"
-                          placeholder="Enter product line name"
-                          value={newProductLine.name}
-                          onChange={(e) =>
-                            setNewProductLine({
-                              ...newProductLine,
-                              name: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="product-line-subcategory">
-                          Subcategory
-                        </Label>
-                        <Select
-                          value={newProductLine.subcategoryId}
-                          onValueChange={(value) =>
-                            setNewProductLine({
-                              ...newProductLine,
-                              subcategoryId: value,
-                            })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a subcategory" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {subcategories.map((subcategory) => (
-                              <SelectItem
-                                key={subcategory.id}
-                                value={subcategory.id}
-                              >
-                                {subcategory.name} ({subcategory.categoryName})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="product-line-description">
-                          Description
-                        </Label>
-                        <Textarea
-                          id="product-line-description"
-                          placeholder="Enter product line description"
-                          value={newProductLine.description}
-                          onChange={(e) =>
-                            setNewProductLine({
-                              ...newProductLine,
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowAddProductLineForm(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        className="bg-violet-600 hover:bg-violet-700"
-                        onClick={() => {
-                          handleAddProductLine();
-                          setShowAddProductLineForm(false);
-                        }}
-                        disabled={
-                          !newProductLine.name || !newProductLine.subcategoryId
-                        }
-                      >
-                        Add Product Line
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                )}
+                {/* Product Line Dialog will be added at the end of the component */}
               </div>
             </TabsContent>
 
@@ -2055,6 +1679,826 @@ const CMSModule: React.FC = () => {
       </main>
 
       <Footer />
+
+      {/* Add Family Dialog */}
+      <Dialog open={showAddFamilyDialog} onOpenChange={setShowAddFamilyDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Product Family</DialogTitle>
+            <DialogDescription>
+              Create a new top-level product family (e.g., Mobile, Apparel)
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="family-name">Family Name</Label>
+              <Input
+                id="family-name"
+                placeholder="Enter family name"
+                value={newFamily.name}
+                onChange={(e) =>
+                  setNewFamily({ ...newFamily, name: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="family-description">Description</Label>
+              <Textarea
+                id="family-description"
+                placeholder="Enter family description"
+                value={newFamily.description}
+                onChange={(e) =>
+                  setNewFamily({
+                    ...newFamily,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAddFamilyDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-violet-600 hover:bg-violet-700"
+              onClick={() => {
+                handleAddFamily();
+                setShowAddFamilyDialog(false);
+              }}
+              disabled={!newFamily.name}
+            >
+              Add Family
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Brand Dialog */}
+      <Dialog open={showAddBrandDialog} onOpenChange={setShowAddBrandDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Brand</DialogTitle>
+            <DialogDescription>
+              Create a new brand and associate it with a product family
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="brand-name">Brand Name</Label>
+              <Input
+                id="brand-name"
+                placeholder="Enter brand name"
+                value={newBrand.name}
+                onChange={(e) =>
+                  setNewBrand({ ...newBrand, name: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="brand-family">Product Family</Label>
+              <Select
+                value={newBrand.familyId}
+                onValueChange={(value) =>
+                  setNewBrand({ ...newBrand, familyId: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a family" />
+                </SelectTrigger>
+                <SelectContent>
+                  {families.map((family) => (
+                    <SelectItem key={family.id} value={family.id}>
+                      {family.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="brand-description">Description</Label>
+              <Textarea
+                id="brand-description"
+                placeholder="Enter brand description"
+                value={newBrand.description}
+                onChange={(e) =>
+                  setNewBrand({
+                    ...newBrand,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAddBrandDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-violet-600 hover:bg-violet-700"
+              onClick={() => {
+                handleAddBrand();
+                setShowAddBrandDialog(false);
+              }}
+              disabled={!newBrand.name || !newBrand.familyId}
+            >
+              Add Brand
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Category Dialog */}
+      <Dialog
+        open={showAddCategoryDialog}
+        onOpenChange={setShowAddCategoryDialog}
+      >
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Category</DialogTitle>
+            <DialogDescription>
+              Create a new category and associate it with a brand
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="category-name">Category Name</Label>
+              <Input
+                id="category-name"
+                placeholder="Enter category name"
+                value={newCategory.name}
+                onChange={(e) =>
+                  setNewCategory({
+                    ...newCategory,
+                    name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category-brand">Brand</Label>
+              <Select
+                value={newCategory.brandId}
+                onValueChange={(value) =>
+                  setNewCategory({ ...newCategory, brandId: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a brand" />
+                </SelectTrigger>
+                <SelectContent>
+                  {brands.map((brand) => (
+                    <SelectItem key={brand.id} value={brand.id}>
+                      {brand.name} ({brand.familyName})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category-description">Description</Label>
+              <Textarea
+                id="category-description"
+                placeholder="Enter category description"
+                value={newCategory.description}
+                onChange={(e) =>
+                  setNewCategory({
+                    ...newCategory,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAddCategoryDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-violet-600 hover:bg-violet-700"
+              onClick={() => {
+                handleAddCategory();
+                setShowAddCategoryDialog(false);
+              }}
+              disabled={!newCategory.name || !newCategory.brandId}
+            >
+              Add Category
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Subcategory Dialog */}
+      <Dialog
+        open={showAddSubcategoryDialog}
+        onOpenChange={setShowAddSubcategoryDialog}
+      >
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Subcategory</DialogTitle>
+            <DialogDescription>
+              Create a new subcategory and associate it with a category
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="subcategory-name">Subcategory Name</Label>
+              <Input
+                id="subcategory-name"
+                placeholder="Enter subcategory name"
+                value={newSubcategory.name}
+                onChange={(e) =>
+                  setNewSubcategory({
+                    ...newSubcategory,
+                    name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="subcategory-category">Category</Label>
+              <Select
+                value={newSubcategory.categoryId}
+                onValueChange={(value) =>
+                  setNewSubcategory({
+                    ...newSubcategory,
+                    categoryId: value,
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name} ({category.brandName})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="subcategory-description">Description</Label>
+              <Textarea
+                id="subcategory-description"
+                placeholder="Enter subcategory description"
+                value={newSubcategory.description}
+                onChange={(e) =>
+                  setNewSubcategory({
+                    ...newSubcategory,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAddSubcategoryDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-violet-600 hover:bg-violet-700"
+              onClick={() => {
+                handleAddSubcategory();
+                setShowAddSubcategoryDialog(false);
+              }}
+              disabled={!newSubcategory.name || !newSubcategory.categoryId}
+            >
+              Add Subcategory
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Product Line Dialog */}
+      <Dialog
+        open={showAddProductLineDialog}
+        onOpenChange={setShowAddProductLineDialog}
+      >
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Product Line/Model</DialogTitle>
+            <DialogDescription>
+              Create a new product line and associate it with a subcategory
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="product-line-name">Product Line Name</Label>
+              <Input
+                id="product-line-name"
+                placeholder="Enter product line name"
+                value={newProductLine.name}
+                onChange={(e) =>
+                  setNewProductLine({
+                    ...newProductLine,
+                    name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="product-line-subcategory">Subcategory</Label>
+              <Select
+                value={newProductLine.subcategoryId}
+                onValueChange={(value) =>
+                  setNewProductLine({
+                    ...newProductLine,
+                    subcategoryId: value,
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a subcategory" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subcategories.map((subcategory) => (
+                    <SelectItem key={subcategory.id} value={subcategory.id}>
+                      {subcategory.name} ({subcategory.categoryName})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="product-line-description">Description</Label>
+              <Textarea
+                id="product-line-description"
+                placeholder="Enter product line description"
+                value={newProductLine.description}
+                onChange={(e) =>
+                  setNewProductLine({
+                    ...newProductLine,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAddProductLineDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-violet-600 hover:bg-violet-700"
+              onClick={() => {
+                handleAddProductLine();
+                setShowAddProductLineDialog(false);
+              }}
+              disabled={!newProductLine.name || !newProductLine.subcategoryId}
+            >
+              Add Product Line
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Product Dialog with Tabs */}
+      <Dialog
+        open={showAddProductDialog}
+        onOpenChange={setShowAddProductDialog}
+      >
+        <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add New Product</DialogTitle>
+            <DialogDescription>
+              Create a new product with all necessary details
+            </DialogDescription>
+          </DialogHeader>
+
+          <Tabs
+            value={productFormTab}
+            onValueChange={setProductFormTab}
+            className="w-full"
+          >
+            <TabsList className="w-full justify-start mb-4">
+              <TabsTrigger
+                value="basic"
+                className="data-[state=active]:bg-violet-100"
+              >
+                Basic Info
+              </TabsTrigger>
+              <TabsTrigger
+                value="images"
+                className="data-[state=active]:bg-violet-100"
+              >
+                Images
+              </TabsTrigger>
+              <TabsTrigger
+                value="variants"
+                className="data-[state=active]:bg-violet-100"
+              >
+                Variants
+              </TabsTrigger>
+              <TabsTrigger
+                value="metadata"
+                className="data-[state=active]:bg-violet-100"
+              >
+                Metadata
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Basic Info Tab */}
+            <TabsContent value="basic" className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="product-name">Product Name</Label>
+                  <Input
+                    id="product-name"
+                    placeholder="Enter product name"
+                    value={newProduct.name}
+                    onChange={(e) =>
+                      setNewProduct({ ...newProduct, name: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="product-line">Product Line</Label>
+                  <Select
+                    value={newProduct.lineId}
+                    onValueChange={(value) =>
+                      setNewProduct({ ...newProduct, lineId: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a product line" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {productLines.map((line) => (
+                        <SelectItem key={line.id} value={line.id}>
+                          {line.name} ({line.brandName})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="product-description">Description</Label>
+                  <Textarea
+                    id="product-description"
+                    placeholder="Enter product description"
+                    value={newProduct.description}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Images Tab */}
+            <TabsContent value="images" className="space-y-4">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="main-image">Main Image URL</Label>
+                  <div className="flex gap-4">
+                    <Input
+                      id="main-image"
+                      placeholder="Enter main image URL"
+                      value={newProduct.mainImage}
+                      onChange={(e) =>
+                        setNewProduct({
+                          ...newProduct,
+                          mainImage: e.target.value,
+                        })
+                      }
+                      className="flex-1"
+                    />
+                    {newProduct.mainImage && (
+                      <div className="relative w-16 h-16 border rounded">
+                        <img
+                          src={newProduct.mainImage}
+                          alt="Main"
+                          className="w-full h-full object-cover rounded"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Additional Images</Label>
+                  {newProduct.additionalImages.map((img, index) => (
+                    <div key={index} className="flex gap-4 items-center">
+                      <Input
+                        placeholder={`Additional image URL ${index + 1}`}
+                        value={img}
+                        onChange={(e) => {
+                          const newImages = [...newProduct.additionalImages];
+                          newImages[index] = e.target.value;
+                          setNewProduct({
+                            ...newProduct,
+                            additionalImages: newImages,
+                          });
+                        }}
+                        className="flex-1"
+                      />
+                      {img && (
+                        <div className="relative w-12 h-12 border rounded">
+                          <img
+                            src={img}
+                            alt={`Additional ${index}`}
+                            className="w-full h-full object-cover rounded"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Variants Tab */}
+            <TabsContent value="variants" className="space-y-4">
+              <div className="space-y-6">
+                {productVariants.map((variant, index) => (
+                  <Card key={index} className="p-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="font-medium">Variant {index + 1}</h4>
+                      {index > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-red-500"
+                          onClick={() => removeVariant(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Attributes based on family */}
+                      {selectedFamily === "1" && (
+                        <>
+                          <div className="space-y-2">
+                            <Label>Color</Label>
+                            <Input
+                              placeholder="Color"
+                              value={variant.attributes["Color"] || ""}
+                              onChange={(e) =>
+                                updateVariantAttribute(
+                                  index,
+                                  "Color",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Memory</Label>
+                            <Input
+                              placeholder="Memory"
+                              value={variant.attributes["Memory"] || ""}
+                              onChange={(e) =>
+                                updateVariantAttribute(
+                                  index,
+                                  "Memory",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                        </>
+                      )}
+
+                      {selectedFamily === "2" && (
+                        <>
+                          <div className="space-y-2">
+                            <Label>Color</Label>
+                            <Input
+                              placeholder="Color"
+                              value={variant.attributes["Color"] || ""}
+                              onChange={(e) =>
+                                updateVariantAttribute(
+                                  index,
+                                  "Color",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Size</Label>
+                            <Input
+                              placeholder="Size"
+                              value={variant.attributes["Size"] || ""}
+                              onChange={(e) =>
+                                updateVariantAttribute(
+                                  index,
+                                  "Size",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                        </>
+                      )}
+
+                      <div className="space-y-2">
+                        <Label>SKU</Label>
+                        <Input
+                          placeholder="SKU"
+                          value={variant.sku}
+                          onChange={(e) =>
+                            updateVariantField(index, "sku", e.target.value)
+                          }
+                          disabled={true}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Price</Label>
+                        <Input
+                          type="number"
+                          placeholder="Price"
+                          value={variant.price}
+                          onChange={(e) =>
+                            updateVariantField(index, "price", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Stock</Label>
+                        <Input
+                          type="number"
+                          placeholder="Stock"
+                          value={variant.stock}
+                          onChange={(e) =>
+                            updateVariantField(index, "stock", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+
+                <Button
+                  variant="outline"
+                  onClick={addVariant}
+                  className="w-full"
+                >
+                  <Plus className="mr-2 h-4 w-4" /> Add Variant
+                </Button>
+              </div>
+            </TabsContent>
+
+            {/* Metadata Tab */}
+            <TabsContent value="metadata" className="space-y-4">
+              <div className="space-y-4">
+                {selectedFamily === "1" && (
+                  <>
+                    <div className="space-y-2">
+                      <Label>Material</Label>
+                      <Input
+                        placeholder="Material"
+                        value={newProduct.metadata?.Material || ""}
+                        onChange={(e) =>
+                          setNewProduct({
+                            ...newProduct,
+                            metadata: {
+                              ...newProduct.metadata,
+                              Material: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Weight</Label>
+                      <Input
+                        placeholder="Weight"
+                        value={newProduct.metadata?.Weight || ""}
+                        onChange={(e) =>
+                          setNewProduct({
+                            ...newProduct,
+                            metadata: {
+                              ...newProduct.metadata,
+                              Weight: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Dimensions</Label>
+                      <Input
+                        placeholder="Dimensions"
+                        value={newProduct.metadata?.Dimensions || ""}
+                        onChange={(e) =>
+                          setNewProduct({
+                            ...newProduct,
+                            metadata: {
+                              ...newProduct.metadata,
+                              Dimensions: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+
+                {selectedFamily === "2" && (
+                  <>
+                    <div className="space-y-2">
+                      <Label>Material</Label>
+                      <Input
+                        placeholder="Material"
+                        value={newProduct.metadata?.Material || ""}
+                        onChange={(e) =>
+                          setNewProduct({
+                            ...newProduct,
+                            metadata: {
+                              ...newProduct.metadata,
+                              Material: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Care</Label>
+                      <Input
+                        placeholder="Care instructions"
+                        value={newProduct.metadata?.Care || ""}
+                        onChange={(e) =>
+                          setNewProduct({
+                            ...newProduct,
+                            metadata: {
+                              ...newProduct.metadata,
+                              Care: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Fit</Label>
+                      <Input
+                        placeholder="Fit"
+                        value={newProduct.metadata?.Fit || ""}
+                        onChange={(e) =>
+                          setNewProduct({
+                            ...newProduct,
+                            metadata: {
+                              ...newProduct.metadata,
+                              Fit: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAddProductDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-violet-600 hover:bg-violet-700"
+              onClick={() => {
+                handleAddProduct();
+                setShowAddProductDialog(false);
+              }}
+              disabled={
+                !newProduct.name ||
+                !newProduct.lineId ||
+                productVariants.length === 0
+              }
+            >
+              Add Product
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
