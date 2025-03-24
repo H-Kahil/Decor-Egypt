@@ -136,8 +136,13 @@ const CMSModule: React.FC = () => {
     brandId: string;
     categoryId: string;
     subcategoryId: string;
+    lineId: string;
     price: number;
     sku: string;
+    mainImage: string;
+    additionalImages: string[];
+    metadata: Record<string, string>;
+    imageAssignment?: string;
   }>({
     name: "",
     description: "",
@@ -145,8 +150,13 @@ const CMSModule: React.FC = () => {
     brandId: "",
     categoryId: "",
     subcategoryId: "",
+    lineId: "",
     price: 0,
     sku: "",
+    mainImage:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80",
+    additionalImages: [],
+    metadata: {},
   });
 
   // State for new product line
@@ -674,13 +684,29 @@ const CMSModule: React.FC = () => {
       categories.find((c) => c.id === newProduct.categoryId)?.name || "";
     const subcategoryName =
       subcategories.find((s) => s.id === newProduct.subcategoryId)?.name || "";
+    const lineName =
+      productLines.find((p) => p.id === newProduct.lineId)?.name || "";
+
+    // Generate a random stock quantity between 10 and 100
+    const randomStock = Math.floor(Math.random() * 90) + 10;
+
+    // Generate a random price between 50 and 1000
+    const randomPrice =
+      newProduct.price || Math.floor(Math.random() * 950) + 50;
+
+    // Generate a SKU if not provided
+    const generatedSku =
+      newProduct.sku ||
+      `${lineName?.substring(0, 3).toUpperCase() || "PRD"}-${Date.now().toString().substring(8)}`;
 
     const newProductItem: Product = {
       id: Date.now().toString(),
       name: newProduct.name,
       description: newProduct.description,
-      sku: newProduct.sku,
-      price: newProduct.price,
+      sku: generatedSku,
+      price: randomPrice,
+      salePrice: randomPrice * 0.9, // 10% discount
+      cost: randomPrice * 0.6, // 40% margin
       status: "Active",
       familyId: newProduct.familyId,
       familyName: familyName,
@@ -690,12 +716,27 @@ const CMSModule: React.FC = () => {
       categoryName: categoryName,
       subcategoryId: newProduct.subcategoryId,
       subcategoryName: subcategoryName,
-      images: [
+      lineId: newProduct.lineId,
+      lineName: lineName,
+      productLineId: newProduct.lineId,
+      mainImage:
+        newProduct.mainImage ||
         "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80",
+      images: [
+        newProduct.mainImage ||
+          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80",
       ],
+      additionalImages: newProduct.additionalImages || [],
+      variants: [],
+      metadata: newProduct.metadata || {},
+      stockQuantity: randomStock,
     };
 
+    // Add the new product to the products array
     setProducts([...products, newProductItem]);
+
+    // Switch to the products tab to show the newly added product
+    setActiveTab("products");
     setNewProduct({
       name: "",
       description: "",
@@ -705,6 +746,10 @@ const CMSModule: React.FC = () => {
       subcategoryId: "",
       price: 0,
       sku: "",
+      mainImage: "",
+      additionalImages: [],
+      metadata: {},
+      lineId: "",
     });
     setShowAddProductDialog(false);
   };
@@ -721,6 +766,8 @@ const CMSModule: React.FC = () => {
       const subcategoryName =
         subcategories.find((s) => s.id === newProduct.subcategoryId)?.name ||
         "";
+      const lineName =
+        productLines.find((p) => p.id === newProduct.lineId)?.name || "";
 
       const updatedProducts = products.map((product) =>
         product.id === editingProduct.id
@@ -738,6 +785,12 @@ const CMSModule: React.FC = () => {
               categoryName: categoryName,
               subcategoryId: newProduct.subcategoryId,
               subcategoryName: subcategoryName,
+              lineId: newProduct.lineId,
+              lineName: lineName,
+              productLineId: newProduct.lineId,
+              mainImage: newProduct.mainImage,
+              additionalImages: newProduct.additionalImages,
+              metadata: newProduct.metadata,
             }
           : product,
       );
@@ -751,8 +804,12 @@ const CMSModule: React.FC = () => {
         brandId: "",
         categoryId: "",
         subcategoryId: "",
+        lineId: "",
         price: 0,
         sku: "",
+        mainImage: "",
+        additionalImages: [],
+        metadata: {},
       });
       setShowEditProductForm(false);
     }
@@ -997,8 +1054,12 @@ const CMSModule: React.FC = () => {
         brandId: editingProduct.brandId || "",
         categoryId: editingProduct.categoryId || "",
         subcategoryId: editingProduct.subcategoryId || "",
+        lineId: editingProduct.lineId || "",
         price: editingProduct.price || 0,
         sku: editingProduct.sku || "",
+        mainImage: editingProduct.mainImage || "",
+        additionalImages: editingProduct.additionalImages || [],
+        metadata: editingProduct.metadata || {},
       });
     }
   }, [editingProduct]);

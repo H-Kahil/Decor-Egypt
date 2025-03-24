@@ -88,7 +88,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
     }>
   >([
     {
-      attributes: { Color: "", Memory: "" },
+      attributes: { Color: "", Memory: "", Model: "" },
       sku: "",
       price: "",
       stock: "",
@@ -104,7 +104,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
     setProductVariants([
       ...productVariants,
       {
-        attributes: { Color: "", Memory: "" },
+        attributes: { Color: "", Memory: "", Model: "" },
         sku: "",
         price: "",
         stock: "",

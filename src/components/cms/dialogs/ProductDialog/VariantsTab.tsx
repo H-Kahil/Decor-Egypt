@@ -101,7 +101,9 @@ const VariantsTab: React.FC<VariantsTabProps> = ({
                 disabled={true}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Format: {product_model}-{color}-{memory}
+                Format: {variant.attributes["Model"] || "model"}-
+                {variant.attributes["Color"] || "color"}-
+                {variant.attributes["Memory"] || "memory"}
               </p>
             </div>
 

@@ -30,12 +30,22 @@ interface ImagesTabProps {
 
 const ImagesTab: React.FC<ImagesTabProps> = ({ newProduct, setNewProduct }) => {
   // Set default image assignment if not set
-  if (!newProduct.imageAssignment) {
-    setNewProduct({
-      ...newProduct,
-      imageAssignment: "per_color",
-    });
-  }
+  React.useEffect(() => {
+    if (!newProduct.imageAssignment) {
+      setNewProduct({
+        ...newProduct,
+        imageAssignment: "per_color",
+      });
+    }
+
+    // Initialize additionalImages array if it's undefined
+    if (!newProduct.additionalImages) {
+      setNewProduct({
+        ...newProduct,
+        additionalImages: [],
+      });
+    }
+  }, []);
   return (
     <div className="space-y-4">
       <div className="mb-6">
@@ -131,7 +141,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ newProduct, setNewProduct }) => {
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Gallery Images</h3>
           <div className="grid grid-cols-3 gap-3">
-            {newProduct.additionalImages.map((img, index) => (
+            {newProduct.additionalImages?.map((img, index) => (
               <div
                 key={index}
                 className="relative aspect-square border rounded-lg overflow-hidden"
@@ -159,7 +169,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({ newProduct, setNewProduct }) => {
                       <X className="h-3 w-3" />
                     </Button>
                   </>
-                ) : index < 8 ? (
+                ) : index < 8 || !newProduct.additionalImages ? (
                   <div
                     className="w-full h-full flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100"
                     onClick={() => {
