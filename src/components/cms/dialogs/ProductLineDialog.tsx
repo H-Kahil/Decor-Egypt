@@ -90,35 +90,9 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
       )
     : subcategories;
 
-  // Function to handle direct subcategory selection
-  const handleSubcategorySelect = (subcategoryId: string) => {
-    const selectedSubcategory = subcategories.find(
-      (sub) => sub.id === subcategoryId,
-    );
-    if (!selectedSubcategory) return;
-
-    const selectedCategory = categories.find(
-      (cat) => cat.id === selectedSubcategory.categoryId,
-    );
-    if (!selectedCategory) return;
-
-    const selectedBrand = brands.find(
-      (brand) => brand.id === selectedCategory.brandId,
-    );
-    if (!selectedBrand) return;
-
-    setNewProductLine({
-      ...newProductLine,
-      subcategoryId,
-      categoryId: selectedCategory.id,
-      brandId: selectedBrand.id,
-      familyId: selectedBrand.familyId,
-    });
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? "Edit Product Model" : "Add New Product Model"}
@@ -129,61 +103,8 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
               : "Create a new product model and associate it with a subcategory"}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-6 py-4">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="product-line-name">Product Model Name</Label>
-              <Input
-                id="product-line-name"
-                placeholder="Enter product model name"
-                value={newProductLine.name}
-                onChange={(e) =>
-                  setNewProductLine({
-                    ...newProductLine,
-                    name: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="product-line-description">Description</Label>
-              <Textarea
-                id="product-line-description"
-                placeholder="Enter product model description"
-                value={newProductLine.description}
-                onChange={(e) =>
-                  setNewProductLine({
-                    ...newProductLine,
-                    description: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="product-line-subcategory-direct">
-                Select Subcategory Directly
-              </Label>
-              <Select
-                value={newProductLine.subcategoryId}
-                onValueChange={handleSubcategorySelect}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a subcategory" />
-                </SelectTrigger>
-                <SelectContent>
-                  {subcategories.map((subcategory) => (
-                    <SelectItem key={subcategory.id} value={subcategory.id}>
-                      {subcategory.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground mt-1">
-                Selecting a subcategory will automatically fill the hierarchy
-              </p>
-            </div>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="product-family">Product Family</Label>
               <Select
@@ -210,6 +131,7 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="product-brand">Brand</Label>
               <Select
@@ -236,6 +158,7 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="product-category">Category</Label>
               <Select
@@ -261,6 +184,7 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="product-subcategory">Subcategory</Label>
               <Select
@@ -284,6 +208,36 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-2 col-span-2">
+              <Label htmlFor="product-line-name">Product Model Name</Label>
+              <Input
+                id="product-line-name"
+                placeholder="Enter product model name"
+                value={newProductLine.name}
+                onChange={(e) =>
+                  setNewProductLine({
+                    ...newProductLine,
+                    name: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div className="space-y-2 col-span-2">
+              <Label htmlFor="product-line-description">Description</Label>
+              <Textarea
+                id="product-line-description"
+                placeholder="Enter product model description"
+                value={newProductLine.description}
+                onChange={(e) =>
+                  setNewProductLine({
+                    ...newProductLine,
+                    description: e.target.value,
+                  })
+                }
+              />
             </div>
           </div>
         </div>

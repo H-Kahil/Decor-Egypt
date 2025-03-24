@@ -156,28 +156,28 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
           onValueChange={setProductFormTab}
           className="w-full"
         >
-          <TabsList className="w-full justify-start mb-4">
+          <TabsList className="w-full justify-start mb-6 border-b rounded-none bg-transparent overflow-x-auto">
             <TabsTrigger
               value="basic"
-              className="data-[state=active]:bg-violet-100"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
             >
               Basic Info
             </TabsTrigger>
             <TabsTrigger
               value="images"
-              className="data-[state=active]:bg-violet-100"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
             >
               Images
             </TabsTrigger>
             <TabsTrigger
               value="variants"
-              className="data-[state=active]:bg-violet-100"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
             >
               Variants
             </TabsTrigger>
             <TabsTrigger
               value="metadata"
-              className="data-[state=active]:bg-violet-100"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
             >
               Metadata
             </TabsTrigger>
