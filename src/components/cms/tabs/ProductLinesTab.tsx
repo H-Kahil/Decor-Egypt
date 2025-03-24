@@ -49,7 +49,6 @@ const ProductLinesTab: React.FC<ProductLinesTabProps> = ({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Product Models</h2>
         <SearchBar
           placeholder="Search product models..."
           value={productLineSearchQuery}

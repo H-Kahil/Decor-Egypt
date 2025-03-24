@@ -39,7 +39,7 @@ import {
 } from "@/components/cms/types";
 
 const CMSModule: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("product-lines");
+  const [activeTab, setActiveTab] = useState("products");
   const [attributeSearchQuery, setAttributeSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [orderSearchQuery, setOrderSearchQuery] = useState("");

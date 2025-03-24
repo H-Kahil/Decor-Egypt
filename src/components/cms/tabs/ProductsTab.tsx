@@ -94,7 +94,6 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
             <TableHead>Name</TableHead>
             <TableHead>Brand</TableHead>
             <TableHead>Category</TableHead>
-            <TableHead>SKU</TableHead>
             <TableHead>Variants</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -107,9 +106,6 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.brandName}</TableCell>
                 <TableCell>{product.categoryName}</TableCell>
-                <TableCell className="font-mono text-xs">
-                  {generateDisplaySKU(product)}
-                </TableCell>
                 <TableCell>{product.variants?.length || 0}</TableCell>
                 <TableCell>
                   <StatusBadge status={product.status} />

@@ -158,6 +158,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
           value={productFormTab}
           onValueChange={setProductFormTab}
           className="w-full"
+          defaultValue="basic"
         >
           <TabsList className="w-full justify-start mb-4 border-b rounded-none bg-transparent overflow-x-auto">
             <TabsTrigger

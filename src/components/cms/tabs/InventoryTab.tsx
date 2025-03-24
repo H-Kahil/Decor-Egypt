@@ -153,7 +153,12 @@ const InventoryTab: React.FC<InventoryTabProps> = ({
                               className="h-10 w-10 rounded-md object-cover"
                             />
                           )}
-                          <span>{product.name}</span>
+                          <div className="flex flex-col">
+                            <span>{product.name}</span>
+                            <span className="text-xs font-mono text-gray-500">
+                              {product.sku}
+                            </span>
+                          </div>
                         </div>
                       </TableCell>
                       <TableCell>{product.sku}</TableCell>
