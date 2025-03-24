@@ -4,6 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Plus, X } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface VariantsTabProps {
   productVariants: Array<{
@@ -31,6 +38,36 @@ const VariantsTab: React.FC<VariantsTabProps> = ({
   updateVariantAttribute,
   updateVariantField,
 }) => {
+  // Predefined options for select dropdowns
+  const colorOptions = [
+    "Black",
+    "White",
+    "Grey",
+    "Red",
+    "Blue",
+    "Green",
+    "Yellow",
+    "Purple",
+    "Orange",
+    "Pink",
+    "Brown",
+    "Silver",
+    "Gold",
+  ];
+
+  const memoryOptions = ["64GB", "128GB", "256GB", "512GB", "1TB", "2TB"];
+
+  // Generate SKU based on product name and variant attributes
+  const generateSKU = (index: number, productName: string) => {
+    const color = productVariants[index].attributes["Color"] || "";
+    const memory = productVariants[index].attributes["Memory"] || "";
+
+    if (productName && color && memory) {
+      const newSku = `${productName.replace(/\s+/g, "-").toLowerCase()}-${color.toLowerCase()}-${memory.toLowerCase()}`;
+      updateVariantField(index, "sku", newSku);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {productVariants.map((variant, index) => (
@@ -50,44 +87,56 @@ const VariantsTab: React.FC<VariantsTabProps> = ({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* Standard attributes for all products */}
+            {/* Color selection */}
             <div className="space-y-2">
               <Label>Color</Label>
-              <Input
-                placeholder="Color (e.g. Black, Red, White)"
+              <Select
                 value={variant.attributes["Color"] || ""}
-                onChange={(e) => {
-                  updateVariantAttribute(index, "Color", e.target.value);
+                onValueChange={(value) => {
+                  updateVariantAttribute(index, "Color", value);
                   // Auto-generate SKU
                   const productName =
                     document.getElementById("product-name")?.value || "";
-                  const color = e.target.value;
-                  const memory = variant.attributes["Memory"] || "";
-                  if (productName && color && memory) {
-                    const newSku = `${productName.replace(/\s+/g, "-").toLowerCase()}-${color.toLowerCase()}-${memory.toLowerCase()}`;
-                    updateVariantField(index, "sku", newSku);
-                  }
+                  generateSKU(index, productName);
                 }}
-              />
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a color" />
+                </SelectTrigger>
+                <SelectContent>
+                  {colorOptions.map((color) => (
+                    <SelectItem key={color} value={color}>
+                      {color}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+
+            {/* Memory selection */}
             <div className="space-y-2">
               <Label>Memory/Storage</Label>
-              <Input
-                placeholder="Memory (e.g. 128GB, 256GB)"
+              <Select
                 value={variant.attributes["Memory"] || ""}
-                onChange={(e) => {
-                  updateVariantAttribute(index, "Memory", e.target.value);
+                onValueChange={(value) => {
+                  updateVariantAttribute(index, "Memory", value);
                   // Auto-generate SKU
                   const productName =
                     document.getElementById("product-name")?.value || "";
-                  const color = variant.attributes["Color"] || "";
-                  const memory = e.target.value;
-                  if (productName && color && memory) {
-                    const newSku = `${productName.replace(/\s+/g, "-").toLowerCase()}-${color.toLowerCase()}-${memory.toLowerCase()}`;
-                    updateVariantField(index, "sku", newSku);
-                  }
+                  generateSKU(index, productName);
                 }}
-              />
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select memory size" />
+                </SelectTrigger>
+                <SelectContent>
+                  {memoryOptions.map((memory) => (
+                    <SelectItem key={memory} value={memory}>
+                      {memory}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

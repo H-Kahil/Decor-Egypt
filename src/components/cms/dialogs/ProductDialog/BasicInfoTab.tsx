@@ -148,6 +148,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                   familyId: value,
                 })
               }
+              defaultValue=""
             >
               <SelectTrigger id="product-family">
                 <SelectValue placeholder="Select a family" />
@@ -173,6 +174,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 })
               }
               disabled={!newProduct.familyId || filteredBrands.length === 0}
+              defaultValue=""
             >
               <SelectTrigger id="product-brand">
                 <SelectValue placeholder="Select a brand" />
@@ -198,6 +200,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 })
               }
               disabled={!newProduct.brandId || filteredCategories.length === 0}
+              defaultValue=""
             >
               <SelectTrigger id="product-category">
                 <SelectValue placeholder="Select a category" />
@@ -228,6 +231,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               disabled={
                 !newProduct.categoryId || filteredSubcategories.length === 0
               }
+              defaultValue=""
             >
               <SelectTrigger id="product-subcategory">
                 <SelectValue placeholder="Select a subcategory" />
@@ -252,6 +256,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               disabled={
                 !newProduct.subcategoryId || filteredProductLines.length === 0
               }
+              defaultValue=""
             >
               <SelectTrigger id="product-line">
                 <SelectValue placeholder="Select a product model" />

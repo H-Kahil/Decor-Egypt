@@ -3,14 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Upload, X, Plus, Image as ImageIcon } from "lucide-react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface ImagesTabProps {
   newProduct: {
@@ -20,8 +12,6 @@ interface ImagesTabProps {
     mainImage: string;
     additionalImages: string[];
     metadata: Record<string, string>;
-    imageAssignment?: string;
-    variantMappings?: Record<string, string>;
   };
   setNewProduct: React.Dispatch<
     React.SetStateAction<{
@@ -31,8 +21,6 @@ interface ImagesTabProps {
       mainImage: string;
       additionalImages: string[];
       metadata: Record<string, string>;
-      imageAssignment?: string;
-      variantMappings?: Record<string, string>;
     }>
   >;
   productVariants: Array<{
@@ -50,32 +38,13 @@ const ImagesTab: React.FC<ImagesTabProps> = ({
 }) => {
   const mainImageInputRef = useRef<HTMLInputElement>(null);
   const additionalImageInputRef = useRef<HTMLInputElement>(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null,
-  );
 
-  // Set default image assignment if not set
+  // Initialize additionalImages array if it's undefined
   React.useEffect(() => {
-    if (!newProduct.imageAssignment) {
-      setNewProduct({
-        ...newProduct,
-        imageAssignment: "per_color",
-      });
-    }
-
-    // Initialize additionalImages array if it's undefined
     if (!newProduct.additionalImages) {
       setNewProduct({
         ...newProduct,
         additionalImages: [],
-      });
-    }
-
-    // Initialize variantMappings if it's undefined
-    if (!newProduct.variantMappings) {
-      setNewProduct({
-        ...newProduct,
-        variantMappings: {},
       });
     }
   }, []);
@@ -125,84 +94,14 @@ const ImagesTab: React.FC<ImagesTabProps> = ({
     }
   };
 
-  // Get available variant attributes based on imageAssignment
-  const getVariantOptions = () => {
-    if (newProduct.imageAssignment === "per_color") {
-      // Get unique color values from variants
-      const colorOptions = new Set<string>();
-      productVariants.forEach((variant) => {
-        if (variant.attributes.Color) {
-          colorOptions.add(variant.attributes.Color);
-        }
-      });
-      return Array.from(colorOptions);
-    } else {
-      // For per_variant, return all variant combinations
-      return productVariants.map((variant, index) => {
-        const attributes = Object.entries(variant.attributes)
-          .filter(([_, value]) => value)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(", ");
-        return {
-          id: index.toString(),
-          name: attributes || `Variant ${index + 1}`,
-        };
-      });
-    }
-  };
-
-  // Handle variant mapping for an image
-  const handleVariantMapping = (imageIndex: number, variantValue: string) => {
-    const newMappings = { ...(newProduct.variantMappings || {}) };
-    newMappings[imageIndex.toString()] = variantValue;
-    setNewProduct({
-      ...newProduct,
-      variantMappings: newMappings,
-    });
-  };
-
   // Ensure we have at least 8 slots for additional images
   const additionalImagesArray = [...(newProduct.additionalImages || [])];
   while (additionalImagesArray.length < 8) {
     additionalImagesArray.push("");
   }
 
-  // Get variant options for dropdown
-  const variantOptions = getVariantOptions();
-
   return (
     <div className="space-y-4">
-      <div className="mb-4">
-        <Label className="text-lg font-medium mb-2 block">
-          Image Assignment
-        </Label>
-        <RadioGroup
-          value={newProduct.imageAssignment || "per_color"}
-          onValueChange={(value) =>
-            setNewProduct({
-              ...newProduct,
-              imageAssignment: value,
-              variantMappings: {}, // Reset mappings when assignment type changes
-            })
-          }
-          className="flex space-x-4"
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="per_color" id="per_color" />
-            <Label htmlFor="per_color">Assign images per color</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="per_variant" id="per_variant" />
-            <Label htmlFor="per_variant">Assign images per variant</Label>
-          </div>
-        </RadioGroup>
-        <p className="text-sm text-gray-500 mt-1">
-          {newProduct.imageAssignment === "per_color"
-            ? "Each color will have its own set of images"
-            : "Each variant (color + memory combination) will have its own images"}
-        </p>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Main Product Image */}
         <div className="space-y-4">
@@ -305,8 +204,7 @@ const ImagesTab: React.FC<ImagesTabProps> = ({
             {additionalImagesArray.map((img, index) => (
               <div
                 key={index}
-                className={`relative aspect-square border rounded-lg overflow-hidden ${selectedImageIndex === index ? "ring-2 ring-violet-500" : ""}`}
-                onClick={() => setSelectedImageIndex(index)}
+                className="relative aspect-square border rounded-lg overflow-hidden"
               >
                 {img ? (
                   <>
@@ -324,21 +222,10 @@ const ImagesTab: React.FC<ImagesTabProps> = ({
                         const newImages = [...newProduct.additionalImages];
                         newImages[index] = "";
 
-                        // Also remove any variant mapping for this image
-                        const newMappings = {
-                          ...(newProduct.variantMappings || {}),
-                        };
-                        delete newMappings[index.toString()];
-
                         setNewProduct({
                           ...newProduct,
                           additionalImages: newImages,
-                          variantMappings: newMappings,
                         });
-
-                        if (selectedImageIndex === index) {
-                          setSelectedImageIndex(null);
-                        }
                       }}
                     >
                       <X className="h-3 w-3" />
@@ -372,67 +259,6 @@ const ImagesTab: React.FC<ImagesTabProps> = ({
           </p>
         </div>
       </div>
-
-      {/* Variant Mapping Section */}
-      {selectedImageIndex !== null &&
-        newProduct.additionalImages[selectedImageIndex] && (
-          <div className="mt-6 p-4 border rounded-lg bg-gray-50">
-            <h3 className="text-md font-medium mb-3">Map Image to Variant</h3>
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 rounded-md overflow-hidden border">
-                <img
-                  src={newProduct.additionalImages[selectedImageIndex]}
-                  alt="Selected"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex-grow">
-                <Label className="mb-1 block">
-                  Assign to{" "}
-                  {newProduct.imageAssignment === "per_color"
-                    ? "Color"
-                    : "Variant"}
-                </Label>
-                <Select
-                  value={
-                    (newProduct.variantMappings || {})[
-                      selectedImageIndex.toString()
-                    ] || ""
-                  }
-                  onValueChange={(value) =>
-                    handleVariantMapping(selectedImageIndex, value)
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue
-                      placeholder={`Select ${newProduct.imageAssignment === "per_color" ? "color" : "variant"}`}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {newProduct.imageAssignment === "per_color"
-                      ? // Show color options
-                        variantOptions.map((color, i) => (
-                          <SelectItem key={i} value={color}>
-                            {color}
-                          </SelectItem>
-                        ))
-                      : // Show variant options
-                        variantOptions.map((variant: any) => (
-                          <SelectItem key={variant.id} value={variant.id}>
-                            {variant.name}
-                          </SelectItem>
-                        ))}
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-gray-500 mt-1">
-                  {newProduct.imageAssignment === "per_color"
-                    ? "This image will be shown when this color is selected"
-                    : "This image will be shown for this specific variant combination"}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
     </div>
   );
 };

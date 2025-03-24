@@ -61,6 +61,19 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
     setProducts(products.filter((product) => product.id !== productId));
   };
 
+  // Generate SKU for display
+  const generateDisplaySKU = (product: Product) => {
+    if (
+      product.variants &&
+      Array.isArray(product.variants) &&
+      product.variants.length > 0 &&
+      product.variants[0]?.sku
+    ) {
+      return product.variants[0].sku;
+    }
+    return `${product.name.replace(/\s+/g, "-").toLowerCase()}`;
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -81,6 +94,7 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
             <TableHead>Name</TableHead>
             <TableHead>Brand</TableHead>
             <TableHead>Category</TableHead>
+            <TableHead>SKU</TableHead>
             <TableHead>Variants</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -93,6 +107,9 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.brandName}</TableCell>
                 <TableCell>{product.categoryName}</TableCell>
+                <TableCell className="font-mono text-xs">
+                  {generateDisplaySKU(product)}
+                </TableCell>
                 <TableCell>{product.variants?.length || 0}</TableCell>
                 <TableCell>
                   <StatusBadge status={product.status} />
@@ -107,7 +124,7 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="text-center py-4">
+              <TableCell colSpan={7} className="text-center py-4">
                 No products found
               </TableCell>
             </TableRow>

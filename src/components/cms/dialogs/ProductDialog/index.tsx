@@ -36,8 +36,6 @@ interface ProductDialogProps {
     brandId?: string;
     categoryId?: string;
     subcategoryId?: string;
-    imageAssignment?: string;
-    variantMappings?: Record<string, string>;
   };
   setNewProduct: React.Dispatch<
     React.SetStateAction<{
@@ -51,8 +49,6 @@ interface ProductDialogProps {
       brandId?: string;
       categoryId?: string;
       subcategoryId?: string;
-      imageAssignment?: string;
-      variantMappings?: Record<string, string>;
     }>
   >;
   handleAddProduct: () => void;
@@ -146,7 +142,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[1200px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[1200px] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? "Edit Product" : "Add New Product"}
@@ -190,7 +186,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
             </TabsTrigger>
           </TabsList>
 
-          <div className="max-h-[calc(90vh-200px)] overflow-y-auto pr-2">
+          <div className="h-auto">
             <TabsContent value="basic">
               <BasicInfoTab
                 newProduct={newProduct}
@@ -232,7 +228,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
           </div>
         </Tabs>
 
-        <DialogFooter className="mt-4 pt-4 border-t">
+        <DialogFooter className="mt-4 pt-4 border-t flex-shrink-0">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
