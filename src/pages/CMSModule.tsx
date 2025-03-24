@@ -14,6 +14,7 @@ import SubcategoriesTab from "@/components/cms/tabs/SubcategoriesTab";
 import ProductLinesTab from "@/components/cms/tabs/ProductLinesTab";
 import CustomersTab from "@/components/cms/tabs/CustomersTab";
 import SettingsTab from "@/components/cms/tabs/SettingsTab";
+import AttributesTab from "@/components/cms/tabs/AttributesTab";
 
 // Import dialogs
 import FamilyDialog from "@/components/cms/dialogs/FamilyDialog";
@@ -22,6 +23,7 @@ import CategoryDialog from "@/components/cms/dialogs/CategoryDialog";
 import SubcategoryDialog from "@/components/cms/dialogs/SubcategoryDialog";
 import ProductDialog from "@/components/cms/dialogs/ProductDialog";
 import ProductLineDialog from "@/components/cms/dialogs/ProductLineDialog";
+import AttributeDialog from "@/components/cms/dialogs/AttributeDialog";
 
 // Import types
 import {
@@ -32,10 +34,12 @@ import {
   ProductLine,
   Product,
   Order,
+  Attribute,
 } from "@/components/cms/types";
 
 const CMSModule: React.FC = () => {
   const [activeTab, setActiveTab] = useState("products");
+  const [attributeSearchQuery, setAttributeSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [orderSearchQuery, setOrderSearchQuery] = useState("");
   const [familySearchQuery, setFamilySearchQuery] = useState("");
@@ -54,6 +58,7 @@ const CMSModule: React.FC = () => {
   const [showAddProductLineDialog, setShowAddProductLineDialog] =
     useState(false);
   const [showAddProductDialog, setShowAddProductDialog] = useState(false);
+  const [showAddAttributeDialog, setShowAddAttributeDialog] = useState(false);
 
   // State for new family
   const [newFamily, setNewFamily] = useState<{
@@ -169,6 +174,33 @@ const CMSModule: React.FC = () => {
     useState<ProductLine | null>(null);
   const [showEditProductLineForm, setShowEditProductLineForm] = useState(false);
 
+  // State for new attribute
+  const [newAttribute, setNewAttribute] = useState<{
+    name: string;
+    description: string;
+    values: { id: string; value: string }[];
+    familyId: string;
+    brandId: string;
+    categoryId: string;
+    subcategoryId: string;
+    productLineId: string;
+  }>({
+    name: "",
+    description: "",
+    values: [],
+    familyId: "",
+    brandId: "",
+    categoryId: "",
+    subcategoryId: "",
+    productLineId: "",
+  });
+
+  // State for editing attributes
+  const [editingAttribute, setEditingAttribute] = useState<Attribute | null>(
+    null,
+  );
+  const [showEditAttributeForm, setShowEditAttributeForm] = useState(false);
+
   // Sample data for product hierarchy
   const [families, setFamilies] = useState<ProductFamily[]>([
     {
@@ -251,6 +283,51 @@ const CMSModule: React.FC = () => {
       familyName: "Apparel",
       brandId: "2",
       brandName: "Nike",
+    },
+  ]);
+
+  const [attributes, setAttributes] = useState<Attribute[]>([
+    {
+      id: "1",
+      name: "Color",
+      description: "Available colors for the product",
+      values: [
+        { id: "1", value: "Red" },
+        { id: "2", value: "Blue" },
+        { id: "3", value: "Green" },
+      ],
+      familyId: "1",
+      familyName: "Mobile",
+      brandId: "1",
+      brandName: "Apple",
+      categoryId: "1",
+      categoryName: "Electronics",
+      subcategoryId: "1",
+      subcategoryName: "Smartphones",
+      productLineId: "1",
+      productLineName: "iPhone",
+      status: "Active",
+    },
+    {
+      id: "2",
+      name: "Size",
+      description: "Available sizes for the product",
+      values: [
+        { id: "1", value: "Small" },
+        { id: "2", value: "Medium" },
+        { id: "3", value: "Large" },
+      ],
+      familyId: "2",
+      familyName: "Apparel",
+      brandId: "2",
+      brandName: "Nike",
+      categoryId: "2",
+      categoryName: "Clothing",
+      subcategoryId: "2",
+      subcategoryName: "T-shirts",
+      productLineId: "2",
+      productLineName: "Nike Sportswear",
+      status: "Active",
     },
   ]);
 
@@ -719,6 +796,105 @@ const CMSModule: React.FC = () => {
     setShowAddProductLineDialog(false);
   };
 
+  // Function to handle adding a new attribute
+  const handleAddAttribute = () => {
+    const familyName =
+      families.find((f) => f.id === newAttribute.familyId)?.name || "";
+    const brandName =
+      brands.find((b) => b.id === newAttribute.brandId)?.name || "";
+    const categoryName =
+      categories.find((c) => c.id === newAttribute.categoryId)?.name || "";
+    const subcategoryName =
+      subcategories.find((s) => s.id === newAttribute.subcategoryId)?.name ||
+      "";
+    const productLineName =
+      productLines.find((p) => p.id === newAttribute.productLineId)?.name || "";
+
+    const newAttributeItem: Attribute = {
+      id: Date.now().toString(),
+      name: newAttribute.name,
+      description: newAttribute.description,
+      values: newAttribute.values,
+      status: "Active",
+      familyId: newAttribute.familyId,
+      familyName: familyName,
+      brandId: newAttribute.brandId,
+      brandName: brandName,
+      categoryId: newAttribute.categoryId,
+      categoryName: categoryName,
+      subcategoryId: newAttribute.subcategoryId,
+      subcategoryName: subcategoryName,
+      productLineId: newAttribute.productLineId,
+      productLineName: productLineName,
+    };
+
+    setAttributes([...attributes, newAttributeItem]);
+    setNewAttribute({
+      name: "",
+      description: "",
+      values: [],
+      familyId: "",
+      brandId: "",
+      categoryId: "",
+      subcategoryId: "",
+      productLineId: "",
+    });
+    setShowAddAttributeDialog(false);
+  };
+
+  // Function to handle updating an attribute
+  const handleUpdateAttribute = () => {
+    if (editingAttribute) {
+      const familyName =
+        families.find((f) => f.id === newAttribute.familyId)?.name || "";
+      const brandName =
+        brands.find((b) => b.id === newAttribute.brandId)?.name || "";
+      const categoryName =
+        categories.find((c) => c.id === newAttribute.categoryId)?.name || "";
+      const subcategoryName =
+        subcategories.find((s) => s.id === newAttribute.subcategoryId)?.name ||
+        "";
+      const productLineName =
+        productLines.find((p) => p.id === newAttribute.productLineId)?.name ||
+        "";
+
+      const updatedAttributes = attributes.map((attribute) =>
+        attribute.id === editingAttribute.id
+          ? {
+              ...attribute,
+              name: newAttribute.name,
+              description: newAttribute.description,
+              values: newAttribute.values,
+              familyId: newAttribute.familyId,
+              familyName: familyName,
+              brandId: newAttribute.brandId,
+              brandName: brandName,
+              categoryId: newAttribute.categoryId,
+              categoryName: categoryName,
+              subcategoryId: newAttribute.subcategoryId,
+              subcategoryName: subcategoryName,
+              productLineId: newAttribute.productLineId,
+              productLineName: productLineName,
+            }
+          : attribute,
+      );
+
+      setAttributes(updatedAttributes);
+      setEditingAttribute(null);
+      setNewAttribute({
+        name: "",
+        description: "",
+        values: [],
+        familyId: "",
+        brandId: "",
+        categoryId: "",
+        subcategoryId: "",
+        productLineId: "",
+      });
+      setShowEditAttributeForm(false);
+    }
+  };
+
   // Function to handle updating a product line
   const handleUpdateProductLine = () => {
     if (editingProductLine) {
@@ -826,6 +1002,22 @@ const CMSModule: React.FC = () => {
     }
   }, [editingProduct]);
 
+  // Effect to set newAttribute when editingAttribute changes
+  React.useEffect(() => {
+    if (editingAttribute) {
+      setNewAttribute({
+        name: editingAttribute.name,
+        description: editingAttribute.description || "",
+        values: editingAttribute.values || [],
+        familyId: editingAttribute.familyId || "",
+        brandId: editingAttribute.brandId || "",
+        categoryId: editingAttribute.categoryId || "",
+        subcategoryId: editingAttribute.subcategoryId || "",
+        productLineId: editingAttribute.productLineId || "",
+      });
+    }
+  }, [editingAttribute]);
+
   // Effect to set newProductLine when editingProductLine changes
   React.useEffect(() => {
     if (editingProductLine) {
@@ -863,6 +1055,11 @@ const CMSModule: React.FC = () => {
   // Handle search for categories
   const handleCategorySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCategorySearchQuery(e.target.value);
+  };
+
+  // Handle search for attributes
+  const handleAttributeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAttributeSearchQuery(e.target.value);
   };
 
   // Render the appropriate tab content based on activeTab
@@ -956,6 +1153,18 @@ const CMSModule: React.FC = () => {
             setShowAddProductLineDialog={setShowAddProductLineDialog}
             setEditingProductLine={setEditingProductLine}
             setShowEditProductLineForm={setShowEditProductLineForm}
+          />
+        );
+      case "attributes":
+        return (
+          <AttributesTab
+            attributes={attributes}
+            attributeSearchQuery={attributeSearchQuery}
+            handleAttributeSearch={handleAttributeSearch}
+            setAttributes={setAttributes}
+            setShowAddAttributeDialog={setShowAddAttributeDialog}
+            setEditingAttribute={setEditingAttribute}
+            setShowEditAttributeForm={setShowEditAttributeForm}
           />
         );
       case "customers":
@@ -1140,6 +1349,36 @@ const CMSModule: React.FC = () => {
         brands={brands}
         categories={categories}
         subcategories={subcategories}
+      />
+
+      {/* Attribute Dialogs */}
+      <AttributeDialog
+        open={showAddAttributeDialog}
+        onOpenChange={setShowAddAttributeDialog}
+        newAttribute={newAttribute}
+        setNewAttribute={setNewAttribute}
+        handleAddAttribute={handleAddAttribute}
+        families={families}
+        brands={brands}
+        categories={categories}
+        subcategories={subcategories}
+        productLines={productLines}
+      />
+
+      <AttributeDialog
+        open={showEditAttributeForm}
+        onOpenChange={setShowEditAttributeForm}
+        newAttribute={newAttribute}
+        setNewAttribute={setNewAttribute}
+        handleAddAttribute={handleAddAttribute}
+        isEdit={true}
+        editingAttribute={editingAttribute}
+        handleUpdateAttribute={handleUpdateAttribute}
+        families={families}
+        brands={brands}
+        categories={categories}
+        subcategories={subcategories}
+        productLines={productLines}
       />
 
       <Footer />

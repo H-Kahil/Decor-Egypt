@@ -121,21 +121,21 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? "Edit Product Line" : "Add New Product Line"}
+            {isEdit ? "Edit Product Model" : "Add New Product Model"}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? "Update the product line details"
-              : "Create a new product line and associate it with a subcategory"}
+              ? "Update the product model details"
+              : "Create a new product model and associate it with a subcategory"}
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-6 py-4">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="product-line-name">Product Line Name</Label>
+              <Label htmlFor="product-line-name">Product Model Name</Label>
               <Input
                 id="product-line-name"
-                placeholder="Enter product line name"
+                placeholder="Enter product model name"
                 value={newProductLine.name}
                 onChange={(e) =>
                   setNewProductLine({
@@ -149,7 +149,7 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
               <Label htmlFor="product-line-description">Description</Label>
               <Textarea
                 id="product-line-description"
-                placeholder="Enter product line description"
+                placeholder="Enter product model description"
                 value={newProductLine.description}
                 onChange={(e) =>
                   setNewProductLine({
@@ -309,7 +309,7 @@ const ProductLineDialog: React.FC<ProductLineDialogProps> = ({
               !newProductLine.subcategoryId
             }
           >
-            {isEdit ? "Update Product Line" : "Add Product Line"}
+            {isEdit ? "Update Product Model" : "Add Product Model"}
           </Button>
         </DialogFooter>
       </DialogContent>

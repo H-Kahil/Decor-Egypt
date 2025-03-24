@@ -51,6 +51,12 @@ const CMSTabNavigation: React.FC<CMSTabNavigationProps> = ({
           Product Model
         </TabsTrigger>
         <TabsTrigger
+          value="attributes"
+          className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
+        >
+          Attributes
+        </TabsTrigger>
+        <TabsTrigger
           value="orders"
           className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
         >

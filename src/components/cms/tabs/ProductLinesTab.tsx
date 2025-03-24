@@ -50,12 +50,12 @@ const ProductLinesTab: React.FC<ProductLinesTabProps> = ({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <SearchBar
-          placeholder="Search product lines..."
+          placeholder="Search product models..."
           value={productLineSearchQuery}
           onChange={handleProductLineSearch}
         />
         <AddButton
-          label="Add Product Line"
+          label="Add Product Model"
           onClick={() => setShowAddProductLineDialog(true)}
         />
       </div>
@@ -109,7 +109,7 @@ const ProductLinesTab: React.FC<ProductLinesTabProps> = ({
           ) : (
             <TableRow>
               <TableCell colSpan={6} className="text-center py-4">
-                No product lines found
+                No product models found
               </TableCell>
             </TableRow>
           )}
