@@ -44,7 +44,7 @@ const CMSTabNavigation: React.FC<CMSTabNavigationProps> = ({
           Subcategories
         </TabsTrigger>
         <TabsTrigger
-          value="product-models"
+          value="product-lines"
           className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
         >
           Product Model

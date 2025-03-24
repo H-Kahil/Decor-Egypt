@@ -39,7 +39,7 @@ import {
 } from "@/components/cms/types";
 
 const CMSModule: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("families");
+  const [activeTab, setActiveTab] = useState("product-lines");
   const [attributeSearchQuery, setAttributeSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [orderSearchQuery, setOrderSearchQuery] = useState("");
@@ -350,11 +350,11 @@ const CMSModule: React.FC = () => {
       subcategoryId: "1",
       subcategoryName: "Smartphones",
       categoryId: "1",
-      categoryName: "Electronics",
+      categoryName: "Mobile",
       brandId: "1",
       brandName: "Apple",
       familyId: "1",
-      familyName: "Mobile",
+      familyName: "Electronics",
       name: "iPhone",
       description: "Apple iPhone product line",
       status: "Active",
@@ -386,11 +386,11 @@ const CMSModule: React.FC = () => {
       cost: 700.0,
       stockQuantity: 150,
       familyId: "1",
-      familyName: "Mobile",
+      familyName: "Electronics",
       brandId: "1",
       brandName: "Apple",
       categoryId: "1",
-      categoryName: "Electronics",
+      categoryName: "Mobile",
       subcategoryId: "1",
       subcategoryName: "Smartphones",
       productLineId: "1",
