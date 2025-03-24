@@ -216,8 +216,8 @@ const CMSModule: React.FC = () => {
   const [families, setFamilies] = useState<ProductFamily[]>([
     {
       id: "1",
-      name: "Mobile",
-      description: "Mobile devices and accessories",
+      name: "Electronics",
+      description: "Electronics devices and accessories",
       status: "Active",
     },
     {
@@ -235,7 +235,8 @@ const CMSModule: React.FC = () => {
       logo: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80",
       description: "Consumer electronics and software",
       status: "Active",
-      familyName: "Mobile",
+      familyId: "1",
+      familyName: "Electronics",
     },
     {
       id: "2",
@@ -243,6 +244,7 @@ const CMSModule: React.FC = () => {
       logo: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&q=80",
       description: "Athletic footwear and apparel",
       status: "Active",
+      familyId: "2",
       familyName: "Apparel",
     },
   ]);
@@ -250,11 +252,11 @@ const CMSModule: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([
     {
       id: "1",
-      name: "Electronics",
+      name: "Mobiles",
       description: "Electronic devices and accessories",
       status: "Active",
       familyId: "1",
-      familyName: "Mobile",
+      familyName: "Electronics",
       brandId: "1",
       brandName: "Apple",
     },
@@ -274,12 +276,12 @@ const CMSModule: React.FC = () => {
     {
       id: "1",
       categoryId: "1",
-      categoryName: "Electronics",
+      categoryName: "Mobiles",
       name: "Smartphones",
       description: "Mobile phones and accessories",
       status: "Active",
       familyId: "1",
-      familyName: "Mobile",
+      familyName: "Electronics",
       brandId: "1",
       brandName: "Apple",
     },
