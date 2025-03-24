@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,13 +13,17 @@ import BasicInfoTab from "./BasicInfoTab";
 import ImagesTab from "./ImagesTab";
 import VariantsTab from "./VariantsTab";
 import MetadataTab from "./MetadataTab";
-import { ProductLine } from "../../types";
+import {
+  ProductLine,
+  ProductFamily,
+  Brand,
+  Category,
+  Subcategory,
+} from "../../types";
 
 interface ProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  productFormTab: string;
-  setProductFormTab: (value: string) => void;
   newProduct: {
     name: string;
     description: string;
@@ -27,6 +31,11 @@ interface ProductDialogProps {
     mainImage: string;
     additionalImages: string[];
     metadata: Record<string, string>;
+    familyId?: string;
+    brandId?: string;
+    categoryId?: string;
+    subcategoryId?: string;
+    imageAssignment?: string;
   };
   setNewProduct: React.Dispatch<
     React.SetStateAction<{
@@ -36,63 +45,109 @@ interface ProductDialogProps {
       mainImage: string;
       additionalImages: string[];
       metadata: Record<string, string>;
+      familyId?: string;
+      brandId?: string;
+      categoryId?: string;
+      subcategoryId?: string;
+      imageAssignment?: string;
     }>
   >;
-  productVariants: Array<{
-    attributes: Record<string, string>;
-    sku: string;
-    price: string;
-    stock: string;
-  }>;
-  setProductVariants: React.Dispatch<
-    React.SetStateAction<
-      Array<{
-        attributes: Record<string, string>;
-        sku: string;
-        price: string;
-        stock: string;
-      }>
-    >
-  >;
   handleAddProduct: () => void;
-  productLines: ProductLine[];
-  selectedFamily: string;
-  selectedProductLine: ProductLine | null;
-  addVariant: () => void;
-  removeVariant: (index: number) => void;
-  updateVariantAttribute: (
-    index: number,
-    attribute: string,
-    value: string,
-  ) => void;
-  updateVariantField: (index: number, field: string, value: string) => void;
+  families?: ProductFamily[];
+  brands?: Brand[];
+  categories?: Category[];
+  subcategories?: Subcategory[];
+  productLines?: ProductLine[];
+  isEdit?: boolean;
+  editingProduct?: any;
+  handleUpdateProduct?: () => void;
 }
 
 const ProductDialog: React.FC<ProductDialogProps> = ({
   open,
   onOpenChange,
-  productFormTab,
-  setProductFormTab,
   newProduct,
   setNewProduct,
-  productVariants,
-  setProductVariants,
   handleAddProduct,
-  productLines,
-  selectedFamily,
-  selectedProductLine,
-  addVariant,
-  removeVariant,
-  updateVariantAttribute,
-  updateVariantField,
+  families = [],
+  brands = [],
+  categories = [],
+  subcategories = [],
+  productLines = [],
+  isEdit = false,
+  editingProduct = null,
+  handleUpdateProduct = () => {},
 }) => {
+  const [productFormTab, setProductFormTab] = useState("basic");
+  const [productVariants, setProductVariants] = useState<
+    Array<{
+      attributes: Record<string, string>;
+      sku: string;
+      price: string;
+      stock: string;
+    }>
+  >([
+    {
+      attributes: { Color: "", Memory: "" },
+      sku: "",
+      price: "",
+      stock: "",
+    },
+  ]);
+
+  const selectedFamily = newProduct.familyId || "";
+  const selectedProductLine =
+    productLines.find((line) => line.id === newProduct.lineId) || null;
+
+  // Function to add a new variant
+  const addVariant = () => {
+    setProductVariants([
+      ...productVariants,
+      {
+        attributes: { Color: "", Memory: "" },
+        sku: "",
+        price: "",
+        stock: "",
+      },
+    ]);
+  };
+
+  // Function to remove a variant
+  const removeVariant = (index: number) => {
+    const newVariants = [...productVariants];
+    newVariants.splice(index, 1);
+    setProductVariants(newVariants);
+  };
+
+  // Function to update a variant attribute
+  const updateVariantAttribute = (
+    index: number,
+    attribute: string,
+    value: string,
+  ) => {
+    const newVariants = [...productVariants];
+    newVariants[index].attributes[attribute] = value;
+    setProductVariants(newVariants);
+  };
+
+  // Function to update a variant field
+  const updateVariantField = (index: number, field: string, value: string) => {
+    const newVariants = [...productVariants];
+    newVariants[index][field as keyof (typeof newVariants)[0]] = value;
+    setProductVariants(newVariants);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Product</DialogTitle>
+          <DialogTitle>
+            {isEdit ? "Edit Product" : "Add New Product"}
+          </DialogTitle>
           <DialogDescription>
-            Create a new product with all necessary details
+            {isEdit
+              ? "Update product details"
+              : "Create a new product with all necessary details"}
           </DialogDescription>
         </DialogHeader>
 
@@ -133,6 +188,10 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
               newProduct={newProduct}
               setNewProduct={setNewProduct}
               productLines={productLines}
+              families={families}
+              brands={brands}
+              categories={categories}
+              subcategories={subcategories}
             />
           </TabsContent>
 
@@ -167,16 +226,12 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
           <Button
             className="bg-violet-600 hover:bg-violet-700"
             onClick={() => {
-              handleAddProduct();
+              isEdit ? handleUpdateProduct() : handleAddProduct();
               onOpenChange(false);
             }}
-            disabled={
-              !newProduct.name ||
-              !newProduct.lineId ||
-              productVariants.length === 0
-            }
+            disabled={!newProduct.name || !newProduct.lineId}
           >
-            Add Product
+            {isEdit ? "Update Product" : "Add Product"}
           </Button>
         </DialogFooter>
       </DialogContent>

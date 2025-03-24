@@ -172,21 +172,167 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px]">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="sm:max-w-[800px] mx-auto p-6 bg-white rounded-lg">
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-xl font-semibold">
             {isEdit ? "Edit Attribute" : "Add New Attribute"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm text-gray-500">
             {isEdit
               ? "Update the attribute details and values"
               : "Create a new attribute and add values to it"}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-6 py-4">
-          <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-8 py-4">
+          {/* Left Column - Hierarchy Selection */}
+          <div className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="attribute-name">Attribute Name</Label>
+              <Label htmlFor="attribute-family" className="font-medium">
+                Product Family
+              </Label>
+              <Select
+                value={newAttribute.familyId}
+                onValueChange={(value) =>
+                  setNewAttribute({
+                    ...newAttribute,
+                    familyId: value,
+                    brandId: "",
+                    categoryId: "",
+                    subcategoryId: "",
+                    productLineId: "",
+                  })
+                }
+              >
+                <SelectTrigger className="w-full border rounded-md">
+                  <SelectValue placeholder="Select a family" />
+                </SelectTrigger>
+                <SelectContent>
+                  {families.map((family) => (
+                    <SelectItem key={family.id} value={family.id}>
+                      {family.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="attribute-brand" className="font-medium">
+                Brand
+              </Label>
+              <Select
+                value={newAttribute.brandId}
+                onValueChange={(value) =>
+                  setNewAttribute({
+                    ...newAttribute,
+                    brandId: value,
+                    categoryId: "",
+                    subcategoryId: "",
+                    productLineId: "",
+                  })
+                }
+                disabled={!newAttribute.familyId}
+              >
+                <SelectTrigger className="w-full border rounded-md">
+                  <SelectValue placeholder="Select a brand" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredBrands.map((brand) => (
+                    <SelectItem key={brand.id} value={brand.id}>
+                      {brand.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="attribute-category" className="font-medium">
+                Category
+              </Label>
+              <Select
+                value={newAttribute.categoryId}
+                onValueChange={(value) =>
+                  setNewAttribute({
+                    ...newAttribute,
+                    categoryId: value,
+                    subcategoryId: "",
+                    productLineId: "",
+                  })
+                }
+                disabled={!newAttribute.brandId}
+              >
+                <SelectTrigger className="w-full border rounded-md">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredCategories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="attribute-subcategory" className="font-medium">
+                Subcategory
+              </Label>
+              <Select
+                value={newAttribute.subcategoryId}
+                onValueChange={(value) =>
+                  setNewAttribute({
+                    ...newAttribute,
+                    subcategoryId: value,
+                    productLineId: "",
+                  })
+                }
+                disabled={!newAttribute.categoryId}
+              >
+                <SelectTrigger className="w-full border rounded-md">
+                  <SelectValue placeholder="Select a subcategory" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredSubcategories.map((subcategory) => (
+                    <SelectItem key={subcategory.id} value={subcategory.id}>
+                      {subcategory.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="attribute-product-line" className="font-medium">
+                Product Model
+              </Label>
+              <Select
+                value={newAttribute.productLineId}
+                onValueChange={(value) =>
+                  setNewAttribute({
+                    ...newAttribute,
+                    productLineId: value,
+                  })
+                }
+                disabled={!newAttribute.subcategoryId}
+              >
+                <SelectTrigger className="w-full border rounded-md">
+                  <SelectValue placeholder="Select a product model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredProductLines.map((productLine) => (
+                    <SelectItem key={productLine.id} value={productLine.id}>
+                      {productLine.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Right Column - Attribute Details */}
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="attribute-name" className="font-medium">
+                Attribute Name
+              </Label>
               <Input
                 id="attribute-name"
                 placeholder="Enter attribute name (e.g., Color, Size)"
@@ -197,10 +343,13 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({
                     name: e.target.value,
                   })
                 }
+                className="w-full border rounded-md"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="attribute-description">Description</Label>
+              <Label htmlFor="attribute-description" className="font-medium">
+                Description
+              </Label>
               <Textarea
                 id="attribute-description"
                 placeholder="Enter attribute description"
@@ -211,10 +360,13 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({
                     description: e.target.value,
                   })
                 }
+                className="w-full border rounded-md min-h-[80px]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="attribute-values">Attribute Values</Label>
+              <Label htmlFor="attribute-values" className="font-medium">
+                Attribute Values
+              </Label>
               <div className="flex space-x-2">
                 <Input
                   id="attribute-values"
@@ -227,12 +379,13 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({
                       addAttributeValue();
                     }
                   }}
+                  className="w-full border rounded-md"
                 />
                 <Button
                   type="button"
                   onClick={addAttributeValue}
                   size="icon"
-                  className="bg-violet-600 hover:bg-violet-700"
+                  className="bg-violet-600 hover:bg-violet-700 rounded-md"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -261,167 +414,42 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({
               )}
             </div>
           </div>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="attribute-subcategory-direct">
-                Select Subcategory Directly
-              </Label>
-              <Select
-                value={newAttribute.subcategoryId}
-                onValueChange={handleSubcategorySelect}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a subcategory" />
-                </SelectTrigger>
-                <SelectContent>
-                  {subcategories.map((subcategory) => (
-                    <SelectItem key={subcategory.id} value={subcategory.id}>
-                      {subcategory.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground mt-1">
-                Selecting a subcategory will automatically fill the hierarchy
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="attribute-family">Product Family</Label>
-              <Select
-                value={newAttribute.familyId}
-                onValueChange={(value) =>
-                  setNewAttribute({
-                    ...newAttribute,
-                    familyId: value,
-                    brandId: "",
-                    categoryId: "",
-                    subcategoryId: "",
-                    productLineId: "",
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a family" />
-                </SelectTrigger>
-                <SelectContent>
-                  {families.map((family) => (
-                    <SelectItem key={family.id} value={family.id}>
-                      {family.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="attribute-brand">Brand</Label>
-              <Select
-                value={newAttribute.brandId}
-                onValueChange={(value) =>
-                  setNewAttribute({
-                    ...newAttribute,
-                    brandId: value,
-                    categoryId: "",
-                    subcategoryId: "",
-                    productLineId: "",
-                  })
-                }
-                disabled={!newAttribute.familyId}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a brand" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredBrands.map((brand) => (
-                    <SelectItem key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="attribute-category">Category</Label>
-              <Select
-                value={newAttribute.categoryId}
-                onValueChange={(value) =>
-                  setNewAttribute({
-                    ...newAttribute,
-                    categoryId: value,
-                    subcategoryId: "",
-                    productLineId: "",
-                  })
-                }
-                disabled={!newAttribute.brandId}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredCategories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="attribute-subcategory">Subcategory</Label>
-              <Select
-                value={newAttribute.subcategoryId}
-                onValueChange={(value) =>
-                  setNewAttribute({
-                    ...newAttribute,
-                    subcategoryId: value,
-                    productLineId: "",
-                  })
-                }
-                disabled={!newAttribute.categoryId}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a subcategory" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredSubcategories.map((subcategory) => (
-                    <SelectItem key={subcategory.id} value={subcategory.id}>
-                      {subcategory.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="attribute-product-line">Product Model</Label>
-              <Select
-                value={newAttribute.productLineId}
-                onValueChange={(value) =>
-                  setNewAttribute({
-                    ...newAttribute,
-                    productLineId: value,
-                  })
-                }
-                disabled={!newAttribute.subcategoryId}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a product model" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredProductLines.map((productLine) => (
-                    <SelectItem key={productLine.id} value={productLine.id}>
-                      {productLine.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        </div>
+        <div className="hidden">
+          <div className="space-y-2">
+            <Label htmlFor="attribute-subcategory-direct">
+              Select Subcategory Directly
+            </Label>
+            <Select
+              value={newAttribute.subcategoryId}
+              onValueChange={handleSubcategorySelect}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a subcategory" />
+              </SelectTrigger>
+              <SelectContent>
+                {subcategories.map((subcategory) => (
+                  <SelectItem key={subcategory.id} value={subcategory.id}>
+                    {subcategory.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground mt-1">
+              Selecting a subcategory will automatically fill the hierarchy
+            </p>
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <DialogFooter className="mt-6 space-x-2">
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            className="rounded-md"
+          >
             Cancel
           </Button>
           <Button
-            className="bg-violet-600 hover:bg-violet-700"
+            className="bg-violet-600 hover:bg-violet-700 rounded-md"
             onClick={() => {
               if (isEdit && handleUpdateAttribute) {
                 handleUpdateAttribute();

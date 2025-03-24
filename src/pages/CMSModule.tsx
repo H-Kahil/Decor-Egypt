@@ -15,13 +15,14 @@ import ProductLinesTab from "@/components/cms/tabs/ProductLinesTab";
 import CustomersTab from "@/components/cms/tabs/CustomersTab";
 import SettingsTab from "@/components/cms/tabs/SettingsTab";
 import AttributesTab from "@/components/cms/tabs/AttributesTab";
+import InventoryTab from "@/components/cms/tabs/InventoryTab";
 
 // Import dialogs
 import FamilyDialog from "@/components/cms/dialogs/FamilyDialog";
 import BrandDialog from "@/components/cms/dialogs/BrandDialog";
 import CategoryDialog from "@/components/cms/dialogs/CategoryDialog";
 import SubcategoryDialog from "@/components/cms/dialogs/SubcategoryDialog";
-import ProductDialog from "@/components/cms/dialogs/ProductDialog";
+import ProductDialog from "@/components/cms/dialogs/ProductDialog/index";
 import ProductLineDialog from "@/components/cms/dialogs/ProductLineDialog";
 import AttributeDialog from "@/components/cms/dialogs/AttributeDialog";
 
@@ -38,7 +39,7 @@ import {
 } from "@/components/cms/types";
 
 const CMSModule: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("products");
+  const [activeTab, setActiveTab] = useState("families");
   const [attributeSearchQuery, setAttributeSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [orderSearchQuery, setOrderSearchQuery] = useState("");
@@ -1077,6 +1078,15 @@ const CMSModule: React.FC = () => {
             setShowAddProductDialog={setShowAddProductDialog}
             setEditingProduct={setEditingProduct}
             setShowEditProductForm={setShowEditProductForm}
+          />
+        );
+      case "inventory":
+        return (
+          <InventoryTab
+            products={products}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            handleSearch={handleSearch}
           />
         );
       case "orders":

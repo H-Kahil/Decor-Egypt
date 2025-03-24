@@ -19,7 +19,6 @@ const CMSTabNavigation: React.FC<CMSTabNavigationProps> = ({
         >
           Products
         </TabsTrigger>
-
         <TabsTrigger
           value="families"
           className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
@@ -73,6 +72,12 @@ const CMSTabNavigation: React.FC<CMSTabNavigationProps> = ({
           className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
         >
           Settings
+        </TabsTrigger>
+        <TabsTrigger
+          value="inventory"
+          className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
+        >
+          Inventory
         </TabsTrigger>
       </TabsList>
     </Tabs>

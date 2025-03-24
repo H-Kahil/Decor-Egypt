@@ -87,6 +87,8 @@ export interface ProductVariant {
   price: number;
   stock?: number;
   images?: string[];
+  color?: string;
+  memory?: string;
 }
 
 export interface Product {

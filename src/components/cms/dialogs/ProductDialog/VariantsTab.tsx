@@ -50,67 +50,59 @@ const VariantsTab: React.FC<VariantsTabProps> = ({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* Attributes based on family */}
-            {selectedFamily === "1" && (
-              <>
-                <div className="space-y-2">
-                  <Label>Color</Label>
-                  <Input
-                    placeholder="Color"
-                    value={variant.attributes["Color"] || ""}
-                    onChange={(e) =>
-                      updateVariantAttribute(index, "Color", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Memory</Label>
-                  <Input
-                    placeholder="Memory"
-                    value={variant.attributes["Memory"] || ""}
-                    onChange={(e) =>
-                      updateVariantAttribute(index, "Memory", e.target.value)
-                    }
-                  />
-                </div>
-              </>
-            )}
-
-            {selectedFamily === "2" && (
-              <>
-                <div className="space-y-2">
-                  <Label>Color</Label>
-                  <Input
-                    placeholder="Color"
-                    value={variant.attributes["Color"] || ""}
-                    onChange={(e) =>
-                      updateVariantAttribute(index, "Color", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Size</Label>
-                  <Input
-                    placeholder="Size"
-                    value={variant.attributes["Size"] || ""}
-                    onChange={(e) =>
-                      updateVariantAttribute(index, "Size", e.target.value)
-                    }
-                  />
-                </div>
-              </>
-            )}
+            {/* Standard attributes for all products */}
+            <div className="space-y-2">
+              <Label>Color</Label>
+              <Input
+                placeholder="Color (e.g. Black, Red, White)"
+                value={variant.attributes["Color"] || ""}
+                onChange={(e) => {
+                  updateVariantAttribute(index, "Color", e.target.value);
+                  // Auto-generate SKU
+                  const productName =
+                    document.getElementById("product-name")?.value || "";
+                  const color = e.target.value;
+                  const memory = variant.attributes["Memory"] || "";
+                  if (productName && color && memory) {
+                    const newSku = `${productName.replace(/\s+/g, "-").toLowerCase()}-${color.toLowerCase()}-${memory.toLowerCase()}`;
+                    updateVariantField(index, "sku", newSku);
+                  }
+                }}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Memory/Storage</Label>
+              <Input
+                placeholder="Memory (e.g. 128GB, 256GB)"
+                value={variant.attributes["Memory"] || ""}
+                onChange={(e) => {
+                  updateVariantAttribute(index, "Memory", e.target.value);
+                  // Auto-generate SKU
+                  const productName =
+                    document.getElementById("product-name")?.value || "";
+                  const color = variant.attributes["Color"] || "";
+                  const memory = e.target.value;
+                  if (productName && color && memory) {
+                    const newSku = `${productName.replace(/\s+/g, "-").toLowerCase()}-${color.toLowerCase()}-${memory.toLowerCase()}`;
+                    updateVariantField(index, "sku", newSku);
+                  }
+                }}
+              />
+            </div>
 
             <div className="space-y-2">
               <Label>SKU</Label>
               <Input
-                placeholder="SKU"
+                placeholder="Auto-generated SKU"
                 value={variant.sku}
                 onChange={(e) =>
                   updateVariantField(index, "sku", e.target.value)
                 }
                 disabled={true}
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Format: {product_model}-{color}-{memory}
+              </p>
             </div>
 
             <div className="space-y-2">

@@ -40,7 +40,14 @@ const ProductsTab: React.FC<ProductsTabProps> = ({
       (product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.brandName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.categoryName?.toLowerCase().includes(searchQuery.toLowerCase()),
+        product.categoryName
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        product.familyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.subcategoryName
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        product.lineName?.toLowerCase().includes(searchQuery.toLowerCase()),
     ) || [];
 
   // Handle edit product

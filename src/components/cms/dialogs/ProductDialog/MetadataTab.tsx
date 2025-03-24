@@ -31,111 +31,68 @@ const MetadataTab: React.FC<MetadataTabProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      {selectedFamily === "1" && (
-        <>
-          <div className="space-y-2">
-            <Label>Material</Label>
-            <Input
-              placeholder="Material"
-              value={newProduct.metadata?.Material || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  metadata: {
-                    ...newProduct.metadata,
-                    Material: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Weight</Label>
-            <Input
-              placeholder="Weight"
-              value={newProduct.metadata?.Weight || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  metadata: {
-                    ...newProduct.metadata,
-                    Weight: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Dimensions</Label>
-            <Input
-              placeholder="Dimensions"
-              value={newProduct.metadata?.Dimensions || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  metadata: {
-                    ...newProduct.metadata,
-                    Dimensions: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-        </>
-      )}
+      <div className="space-y-2">
+        <Label>Material</Label>
+        <Input
+          placeholder="Material"
+          value={newProduct.metadata?.Material || ""}
+          onChange={(e) =>
+            setNewProduct({
+              ...newProduct,
+              metadata: {
+                ...newProduct.metadata,
+                Material: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
 
-      {selectedFamily === "2" && (
-        <>
-          <div className="space-y-2">
-            <Label>Material</Label>
-            <Input
-              placeholder="Material"
-              value={newProduct.metadata?.Material || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  metadata: {
-                    ...newProduct.metadata,
-                    Material: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Care</Label>
-            <Input
-              placeholder="Care instructions"
-              value={newProduct.metadata?.Care || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  metadata: {
-                    ...newProduct.metadata,
-                    Care: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Fit</Label>
-            <Input
-              placeholder="Fit"
-              value={newProduct.metadata?.Fit || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  metadata: {
-                    ...newProduct.metadata,
-                    Fit: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-        </>
-      )}
+      <div className="space-y-2">
+        <Label>Weight</Label>
+        <Input
+          placeholder="Weight"
+          value={newProduct.metadata?.Weight || ""}
+          onChange={(e) =>
+            setNewProduct({
+              ...newProduct,
+              metadata: {
+                ...newProduct.metadata,
+                Weight: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Dimensions</Label>
+        <Input
+          placeholder="Dimensions"
+          value={newProduct.metadata?.Dimensions || ""}
+          onChange={(e) =>
+            setNewProduct({
+              ...newProduct,
+              metadata: {
+                ...newProduct.metadata,
+                Dimensions: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>SKU Format</Label>
+        <Input
+          placeholder="SKU Format"
+          value="{product_model}-{color}-{memory}"
+          disabled={true}
+        />
+        <p className="text-xs text-gray-500 mt-1">
+          This is the format used for automatic SKU generation
+        </p>
+      </div>
     </div>
   );
 };

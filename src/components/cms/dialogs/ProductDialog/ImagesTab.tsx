@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Upload, X, Plus } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface ImagesTabProps {
   newProduct: {
@@ -12,6 +13,7 @@ interface ImagesTabProps {
     mainImage: string;
     additionalImages: string[];
     metadata: Record<string, string>;
+    imageAssignment?: string;
   };
   setNewProduct: React.Dispatch<
     React.SetStateAction<{
@@ -21,13 +23,48 @@ interface ImagesTabProps {
       mainImage: string;
       additionalImages: string[];
       metadata: Record<string, string>;
+      imageAssignment?: string;
     }>
   >;
 }
 
 const ImagesTab: React.FC<ImagesTabProps> = ({ newProduct, setNewProduct }) => {
+  // Set default image assignment if not set
+  if (!newProduct.imageAssignment) {
+    setNewProduct({
+      ...newProduct,
+      imageAssignment: "per_color",
+    });
+  }
   return (
     <div className="space-y-4">
+      <div className="mb-6">
+        <Label className="text-lg font-medium mb-2 block">
+          Image Assignment
+        </Label>
+        <RadioGroup
+          value={newProduct.imageAssignment || "per_color"}
+          onValueChange={(value) =>
+            setNewProduct({ ...newProduct, imageAssignment: value })
+          }
+          className="flex space-x-4"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="per_color" id="per_color" />
+            <Label htmlFor="per_color">Assign images per color</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="per_variant" id="per_variant" />
+            <Label htmlFor="per_variant">Assign images per variant</Label>
+          </div>
+        </RadioGroup>
+        <p className="text-sm text-gray-500 mt-1">
+          {newProduct.imageAssignment === "per_color"
+            ? "Each color will have its own set of images"
+            : "Each variant (color + memory combination) will have its own images"}
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Main Product Image */}
         <div className="space-y-4">
