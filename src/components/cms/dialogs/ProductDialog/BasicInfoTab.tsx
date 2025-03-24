@@ -54,7 +54,7 @@ interface BasicInfoTabProps {
 const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
   newProduct,
   setNewProduct,
-  productLines,
+  productLines = [],
   families = [],
   brands = [],
   categories = [],
@@ -84,15 +84,55 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
       )
     : [];
 
-  // Update product line when subcategory changes
+  // Log for debugging
+  console.log("Product Lines:", productLines);
+  console.log("Selected Subcategory:", newProduct.subcategoryId);
+  console.log("Filtered Product Lines:", filteredProductLines);
+  console.log("Subcategories:", subcategories);
+
+  // Reset dependent fields when parent selection changes
+  useEffect(() => {
+    if (newProduct.familyId) {
+      setNewProduct((prev) => ({
+        ...prev,
+        brandId: "",
+        categoryId: "",
+        subcategoryId: "",
+        lineId: "",
+      }));
+    }
+  }, [newProduct.familyId, setNewProduct]);
+
+  useEffect(() => {
+    if (newProduct.brandId) {
+      setNewProduct((prev) => ({
+        ...prev,
+        categoryId: "",
+        subcategoryId: "",
+        lineId: "",
+      }));
+    }
+  }, [newProduct.brandId, setNewProduct]);
+
+  useEffect(() => {
+    if (newProduct.categoryId) {
+      setNewProduct((prev) => ({
+        ...prev,
+        subcategoryId: "",
+        lineId: "",
+      }));
+    }
+  }, [newProduct.categoryId, setNewProduct]);
+
   useEffect(() => {
     if (newProduct.subcategoryId) {
-      setNewProduct({
-        ...newProduct,
-        lineId: "", // Reset product line when subcategory changes
-      });
+      setNewProduct((prev) => ({
+        ...prev,
+        lineId: "",
+      }));
     }
-  }, [newProduct.subcategoryId]);
+  }, [newProduct.subcategoryId, setNewProduct]);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-6">
@@ -106,14 +146,10 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 setNewProduct({
                   ...newProduct,
                   familyId: value,
-                  brandId: "",
-                  categoryId: "",
-                  subcategoryId: "",
-                  lineId: "",
                 })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger id="product-family">
                 <SelectValue placeholder="Select a family" />
               </SelectTrigger>
               <SelectContent>
@@ -134,14 +170,11 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 setNewProduct({
                   ...newProduct,
                   brandId: value,
-                  categoryId: "",
-                  subcategoryId: "",
-                  lineId: "",
                 })
               }
-              disabled={!newProduct.familyId}
+              disabled={!newProduct.familyId || filteredBrands.length === 0}
             >
-              <SelectTrigger>
+              <SelectTrigger id="product-brand">
                 <SelectValue placeholder="Select a brand" />
               </SelectTrigger>
               <SelectContent>
@@ -162,13 +195,11 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 setNewProduct({
                   ...newProduct,
                   categoryId: value,
-                  subcategoryId: "",
-                  lineId: "",
                 })
               }
-              disabled={!newProduct.brandId}
+              disabled={!newProduct.brandId || filteredCategories.length === 0}
             >
-              <SelectTrigger>
+              <SelectTrigger id="product-category">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -192,12 +223,13 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 setNewProduct({
                   ...newProduct,
                   subcategoryId: value,
-                  lineId: "",
                 })
               }
-              disabled={!newProduct.categoryId}
+              disabled={
+                !newProduct.categoryId || filteredSubcategories.length === 0
+              }
             >
-              <SelectTrigger>
+              <SelectTrigger id="product-subcategory">
                 <SelectValue placeholder="Select a subcategory" />
               </SelectTrigger>
               <SelectContent>
@@ -213,13 +245,15 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           <div className="space-y-2">
             <Label htmlFor="product-line">Product Model</Label>
             <Select
-              value={newProduct.lineId}
+              value={newProduct.lineId || ""}
               onValueChange={(value) =>
                 setNewProduct({ ...newProduct, lineId: value })
               }
-              disabled={!newProduct.subcategoryId}
+              disabled={
+                !newProduct.subcategoryId || filteredProductLines.length === 0
+              }
             >
-              <SelectTrigger>
+              <SelectTrigger id="product-line">
                 <SelectValue placeholder="Select a product model" />
               </SelectTrigger>
               <SelectContent>
@@ -230,6 +264,11 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 ))}
               </SelectContent>
             </Select>
+            {newProduct.subcategoryId && filteredProductLines.length === 0 && (
+              <p className="text-xs text-red-500 mt-1">
+                No product models available for this subcategory
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">

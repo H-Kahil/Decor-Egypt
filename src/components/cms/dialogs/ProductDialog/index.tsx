@@ -19,6 +19,7 @@ import {
   Brand,
   Category,
   Subcategory,
+  Product,
 } from "../../types";
 
 interface ProductDialogProps {
@@ -36,6 +37,7 @@ interface ProductDialogProps {
     categoryId?: string;
     subcategoryId?: string;
     imageAssignment?: string;
+    variantMappings?: Record<string, string>;
   };
   setNewProduct: React.Dispatch<
     React.SetStateAction<{
@@ -50,6 +52,7 @@ interface ProductDialogProps {
       categoryId?: string;
       subcategoryId?: string;
       imageAssignment?: string;
+      variantMappings?: Record<string, string>;
     }>
   >;
   handleAddProduct: () => void;
@@ -59,7 +62,7 @@ interface ProductDialogProps {
   subcategories?: Subcategory[];
   productLines?: ProductLine[];
   isEdit?: boolean;
-  editingProduct?: any;
+  editingProduct?: Product | null;
   handleUpdateProduct?: () => void;
 }
 
@@ -94,6 +97,10 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
       stock: "",
     },
   ]);
+
+  // Log for debugging
+  console.log("All Product Lines:", productLines);
+  console.log("Current Product State:", newProduct);
 
   const selectedFamily = newProduct.familyId || "";
   const selectedProductLine =
@@ -139,7 +146,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[1200px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? "Edit Product" : "Add New Product"}
@@ -156,7 +163,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
           onValueChange={setProductFormTab}
           className="w-full"
         >
-          <TabsList className="w-full justify-start mb-6 border-b rounded-none bg-transparent overflow-x-auto">
+          <TabsList className="w-full justify-start mb-4 border-b rounded-none bg-transparent overflow-x-auto">
             <TabsTrigger
               value="basic"
               className="data-[state=active]:border-b-2 data-[state=active]:border-violet-600 data-[state=active]:text-violet-600 rounded-none bg-transparent"
@@ -183,43 +190,49 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="basic">
-            <BasicInfoTab
-              newProduct={newProduct}
-              setNewProduct={setNewProduct}
-              productLines={productLines}
-              families={families}
-              brands={brands}
-              categories={categories}
-              subcategories={subcategories}
-            />
-          </TabsContent>
+          <div className="max-h-[calc(90vh-200px)] overflow-y-auto pr-2">
+            <TabsContent value="basic">
+              <BasicInfoTab
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                productLines={productLines}
+                families={families}
+                brands={brands}
+                categories={categories}
+                subcategories={subcategories}
+              />
+            </TabsContent>
 
-          <TabsContent value="images">
-            <ImagesTab newProduct={newProduct} setNewProduct={setNewProduct} />
-          </TabsContent>
+            <TabsContent value="images">
+              <ImagesTab
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                productVariants={productVariants}
+              />
+            </TabsContent>
 
-          <TabsContent value="variants">
-            <VariantsTab
-              productVariants={productVariants}
-              selectedFamily={selectedFamily}
-              addVariant={addVariant}
-              removeVariant={removeVariant}
-              updateVariantAttribute={updateVariantAttribute}
-              updateVariantField={updateVariantField}
-            />
-          </TabsContent>
+            <TabsContent value="variants">
+              <VariantsTab
+                productVariants={productVariants}
+                selectedFamily={selectedFamily}
+                addVariant={addVariant}
+                removeVariant={removeVariant}
+                updateVariantAttribute={updateVariantAttribute}
+                updateVariantField={updateVariantField}
+              />
+            </TabsContent>
 
-          <TabsContent value="metadata">
-            <MetadataTab
-              newProduct={newProduct}
-              setNewProduct={setNewProduct}
-              selectedFamily={selectedFamily}
-            />
-          </TabsContent>
+            <TabsContent value="metadata">
+              <MetadataTab
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                selectedFamily={selectedFamily}
+              />
+            </TabsContent>
+          </div>
         </Tabs>
 
-        <DialogFooter>
+        <DialogFooter className="mt-4 pt-4 border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>

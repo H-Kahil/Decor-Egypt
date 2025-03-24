@@ -1379,6 +1379,7 @@ const CMSModule: React.FC = () => {
         brands={brands}
         categories={categories}
         subcategories={subcategories}
+        productLines={productLines}
       />
 
       <ProductDialog
@@ -1394,6 +1395,7 @@ const CMSModule: React.FC = () => {
         brands={brands}
         categories={categories}
         subcategories={subcategories}
+        productLines={productLines}
       />
 
       {/* Product Line Dialogs */}
