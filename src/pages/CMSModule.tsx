@@ -355,8 +355,8 @@ const CMSModule: React.FC = () => {
       brandName: "Apple",
       familyId: "1",
       familyName: "Electronics",
-      name: "iPhone",
-      description: "Apple iPhone product line",
+      name: "iPhone 15 Pro",
+      description: "Apple iPhone 15 Pro product line",
       status: "Active",
     },
     {
@@ -378,7 +378,7 @@ const CMSModule: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([
     {
       id: "1",
-      name: "iPhone 13 Pro",
+      name: "iPhone 15 Pro 128 Grey",
       sku: "IP13PRO-128-GRY",
       description: "Latest iPhone model with advanced features",
       price: 999.99,
@@ -395,7 +395,7 @@ const CMSModule: React.FC = () => {
       subcategoryName: "Smartphones",
       productLineId: "1",
       lineId: "1",
-      lineName: "iPhone",
+      lineName: "iPhone 15 Pro",
       images: [
         "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80",
       ],

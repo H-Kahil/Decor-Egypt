@@ -187,7 +187,7 @@ const ProductDialog: React.FC<ProductDialogProps> = ({
             <BasicInfoTab
               newProduct={newProduct}
               setNewProduct={setNewProduct}
-              productLines={productLines}
+              productLines={productLines || []}
               families={families}
               brands={brands}
               categories={categories}

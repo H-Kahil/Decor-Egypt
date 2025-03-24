@@ -86,7 +86,7 @@ const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
 
   // Update product line when subcategory changes
   useEffect(() => {
-    if (newProduct.subcategoryId && filteredProductLines.length > 0) {
+    if (newProduct.subcategoryId) {
       setNewProduct({
         ...newProduct,
         lineId: "", // Reset product line when subcategory changes
